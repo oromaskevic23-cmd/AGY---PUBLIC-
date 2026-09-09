@@ -7383,3 +7383,1748 @@ AGY is an IMPERIAL Core technology authored and architected by Alexander Romaske
 
 Copyright © 2026 Alexander Romaskevich. All rights reserved.
 ```
+# AGY Core Protocol, State Machine, Blocks, Transactions & Data Model
+
+Author & Chief Architect: Alexander Romaskevich  
+Public Signature: RomaskevicH  
+Founder • Owner • CEO • Chief Systems Architect of IMPERIAL Core  
+Technology: AGY — The Native Blockchain for Autonomous Intelligence  
+Provenance: An IMPERIAL Core technology authored and architected by Alexander Romaskevich  
+Copyright © 2026 Alexander Romaskevich. All rights reserved.
+
+---
+
+## Canonical Authorship Index
+
+```text
+PROJECT:
+AGY
+
+CANONICAL_TITLE:
+AGY — The Native Blockchain for Autonomous Intelligence
+
+AUTHOR:
+Alexander Romaskevich
+
+PUBLIC_SIGNATURE:
+RomaskevicH
+
+AUTHOR_ROLE:
+Founder • Owner • CEO • Chief Systems Architect of IMPERIAL Core
+
+ARCHITECTURAL_AUTHORITY:
+Final Architectural Decision Authority
+
+ORIGIN:
+IMPERIAL Core
+
+ARCHITECTURE_DOMAIN:
+CORE PROTOCOL / STATE / BLOCKS / TRANSACTIONS
+
+PROVENANCE:
+AGY is an IMPERIAL Core technology authored and architected by Alexander Romaskevich.
+
+COPYRIGHT:
+Copyright © 2026 Alexander Romaskevich. All rights reserved.
+```
+
+---
+
+# Core Protocol Objective
+
+AGY requires a deterministic protocol core capable of representing autonomous intelligence as native blockchain state.
+
+Traditional blockchain architectures primarily model:
+
+```text
+ACCOUNT
+→
+BALANCE
+→
+TRANSFER
+```
+
+AGY extends the protocol model into:
+
+```text
+IDENTITY
+→
+CAPABILITY
+→
+INTENT
+→
+MISSION
+→
+AUTHORIZATION
+→
+ACTION
+→
+EVIDENCE
+→
+VERIFICATION
+→
+REPUTATION
+```
+
+This lifecycle is not merely application metadata.
+
+It is intended to become part of AGY's canonical protocol semantics.
+
+---
+
+# Canonical AGY Architecture
+
+```mermaid
+flowchart TB
+    AUTHOR[Alexander Romaskevich / RomaskevicH<br/>Author & Chief Architect]
+    --> SPEC[AGY Canonical Protocol Specification]
+
+    SPEC --> NET[Network Layer]
+    SPEC --> CONS[Consensus Layer]
+    SPEC --> STATE[State Machine]
+    SPEC --> EXEC[Execution Layer]
+
+    STATE --> PASSPORT[AI Passport State]
+    STATE --> CAP[Capability State]
+    STATE --> INTENT[Intent State]
+    STATE --> MISSION[Mission State]
+    STATE --> CONTRACT[Agent Contract State]
+    STATE --> EVIDENCE[Evidence State]
+    STATE --> REP[Reputation State]
+    STATE --> GOV[Governance State]
+
+    EXEC --> GUARD[Guardian]
+    GUARD --> STATE
+
+    CONS --> BLOCK[Finalized Blocks]
+    BLOCK --> STATE
+
+    STATE --> ROOT[Canonical State Root]
+```
+
+---
+
+# Deterministic State Machine
+
+Every valid AGY validator must produce the same resulting state when processing the same ordered block.
+
+Canonical requirement:
+
+```text
+SAME PREVIOUS STATE
++
+SAME BLOCK
++
+SAME PROTOCOL VERSION
+=
+SAME RESULTING STATE
+```
+
+Any protocol behavior that depends on:
+
+- local clock differences;
+- nondeterministic randomness;
+- hidden external API responses;
+- local filesystem state;
+- validator-specific model output;
+
+must not directly determine consensus state.
+
+---
+
+# State Transition Function
+
+Conceptually:
+
+```text
+S(t+1) = APPLY(S(t), BLOCK)
+```
+
+where:
+
+```text
+S(t)
+=
+previous canonical state
+
+BLOCK
+=
+ordered validated protocol operations
+
+S(t+1)
+=
+new canonical state
+```
+
+Expanded:
+
+```mermaid
+flowchart LR
+    S0[Previous State Root]
+    --> B[Finalized Block]
+    --> V[Transaction Validation]
+    --> E[Deterministic Execution]
+    --> S1[New State Root]
+```
+
+---
+
+# AGY Global State
+
+Canonical AGY state can be partitioned into logical domains:
+
+```text
+SYSTEM_STATE
+VALIDATOR_STATE
+AGENT_STATE
+PASSPORT_STATE
+CAPABILITY_STATE
+INTENT_STATE
+MISSION_STATE
+CONTRACT_STATE
+DELEGATION_STATE
+EVIDENCE_STATE
+VERIFICATION_STATE
+REPUTATION_STATE
+GOVERNANCE_STATE
+RESOURCE_STATE
+OPTIONAL_ASSET_STATE
+AUDIT_STATE
+```
+
+Each domain can expose its own state root.
+
+---
+
+# Hierarchical State Root
+
+```mermaid
+graph TD
+    ROOT[AGY Global State Root]
+
+    ROOT --> S[System Root]
+    ROOT --> V[Validator Root]
+    ROOT --> A[Agent Root]
+    ROOT --> M[Mission Root]
+    ROOT --> E[Evidence Root]
+    ROOT --> R[Reputation Root]
+    ROOT --> G[Governance Root]
+
+    A --> P[Passport Root]
+    A --> C[Capability Root]
+    A --> D[Delegation Root]
+
+    M --> I[Intent Root]
+    M --> CT[Contract Root]
+```
+
+This permits independent proofs for specific protocol domains.
+
+---
+
+# State Commitment
+
+Every finalized block should commit to the resulting canonical state.
+
+Example:
+
+```text
+BLOCK_HEIGHT:
+1,000,000
+
+PREVIOUS_BLOCK_HASH:
+0x...
+
+TRANSACTION_ROOT:
+0x...
+
+EVIDENCE_ROOT:
+0x...
+
+STATE_ROOT:
+0x...
+
+VALIDATOR_SET_ROOT:
+0x...
+
+POLICY_ROOT:
+0x...
+```
+
+A client can verify state integrity without trusting an explorer or RPC response.
+
+---
+
+# AGY Block Structure
+
+Conceptual block header:
+
+```text
+protocol_version
+chain_id
+height
+round
+previous_block_hash
+timestamp
+proposer_id
+transaction_root
+receipt_root
+state_root
+validator_set_root
+policy_root
+evidence_root
+consensus_commit
+```
+
+Block body:
+
+```text
+BLOCK
+├── HEADER
+├── TRANSACTIONS
+├── SYSTEM OPERATIONS
+├── RECEIPTS
+└── CONSENSUS EVIDENCE
+```
+
+---
+
+# Block Production Lifecycle
+
+```mermaid
+sequenceDiagram
+    participant A as Agents
+    participant R as RPC Gateway
+    participant G as Guardian
+    participant V as Validators
+    participant C as BFT Consensus
+    participant S as State Machine
+
+    A->>R: Submit signed operations
+    R->>G: Admission validation
+    G-->>R: Allow / Deny
+    R->>V: Valid operations
+    V->>C: Propose + Vote
+    C-->>V: Finalized block
+    V->>S: Execute finalized block
+    S-->>V: New State Root
+```
+
+---
+
+# Native AGY Transaction Model
+
+AGY should use protocol-native transaction families.
+
+Initial transaction classes can include:
+
+```text
+SYSTEM
+IDENTITY
+CAPABILITY
+INTENT
+MISSION
+DELEGATION
+CONTRACT
+EVIDENCE
+VERIFICATION
+REPUTATION
+SESSION
+GOVERNANCE
+RESOURCE
+ASSET
+```
+
+---
+
+# Native Transaction Types
+
+Examples:
+
+```text
+REGISTER_AGENT
+UPDATE_AGENT
+ROTATE_AGENT_KEY
+SUSPEND_AGENT
+REVOKE_AGENT
+
+ISSUE_CAPABILITY
+UPDATE_CAPABILITY
+REVOKE_CAPABILITY
+
+CREATE_INTENT
+AUTHORIZE_INTENT
+DENY_INTENT
+CANCEL_INTENT
+
+CREATE_MISSION
+ACCEPT_MISSION
+UPDATE_MISSION
+DELEGATE_MISSION
+SUBMIT_MISSION_RESULT
+CLOSE_MISSION
+
+CREATE_AGENT_CONTRACT
+ACCEPT_AGENT_CONTRACT
+CANCEL_AGENT_CONTRACT
+
+SUBMIT_EVIDENCE
+VERIFY_EVIDENCE
+DISPUTE_EVIDENCE
+
+UPDATE_REPUTATION
+
+OPEN_AGENT_SESSION
+CLOSE_AGENT_SESSION
+
+CREATE_GOVERNANCE_PROPOSAL
+CAST_GOVERNANCE_VOTE
+EXECUTE_GOVERNANCE_PROPOSAL
+```
+
+These are examples of protocol semantics, not a frozen implementation ABI.
+
+---
+
+# Transaction Envelope
+
+Every AGY transaction can use a canonical envelope.
+
+```text
+version
+chain_id
+transaction_type
+sender
+sequence
+timestamp
+expiration
+mission_id
+capability_reference
+payload
+payload_hash
+signature_domain
+signature
+```
+
+---
+
+# Transaction Validation Pipeline
+
+```mermaid
+flowchart TD
+    TX[Incoming Transaction]
+    --> F[Format Validation]
+    --> C[Chain ID Check]
+    --> S[Signature Validation]
+    --> N[Sequence / Replay Check]
+    --> X[Expiration Check]
+    --> I[Identity Check]
+    --> CAP[Capability Check]
+    --> M[Mission Scope]
+    --> P[Policy / Guardian]
+    --> R[Resource Admission]
+    --> Q[Transaction Queue]
+
+    P -->|DENY| D[Rejected Receipt]
+```
+
+---
+
+# Transaction Status
+
+Canonical transaction status:
+
+```text
+RECEIVED
+VALIDATING
+ADMITTED
+PROPOSED
+FINALIZED
+EXECUTED
+FAILED
+REJECTED
+EXPIRED
+```
+
+Important distinction:
+
+```text
+SUBMITTED
+≠
+FINALIZED
+
+FINALIZED
+≠
+EXECUTED SUCCESSFULLY
+```
+
+The resulting receipt determines actual execution status.
+
+---
+
+# Sequence Numbers
+
+Every signing identity can maintain a monotonically increasing sequence.
+
+Example:
+
+```text
+AGENT:
+AGY-AGENT-100
+
+LAST_SEQUENCE:
+819
+
+NEXT_VALID_SEQUENCE:
+820
+```
+
+This provides replay protection.
+
+---
+
+# Replay Protection
+
+A valid transaction on one AGY network must not automatically be valid on another.
+
+Every signed object should bind to:
+
+```text
+CHAIN_ID
+PROTOCOL_DOMAIN
+SEQUENCE
+EXPIRATION
+```
+
+Canonical signing context:
+
+```text
+AGY
++
+CHAIN ID
++
+OBJECT TYPE
++
+OBJECT HASH
++
+SEQUENCE
+```
+
+---
+
+# Chain Identity
+
+Each AGY network receives an explicit Chain ID.
+
+Examples:
+
+```text
+agy-local-1
+agy-devnet-1
+agy-testnet-1
+agy-mainnet-1
+```
+
+Actual production identifiers must be finalized before deployment.
+
+---
+
+# AGY Address Architecture
+
+AGY should distinguish address types.
+
+Possible logical forms:
+
+```text
+AGENT ADDRESS
+VALIDATOR ADDRESS
+ORGANIZATION ADDRESS
+SYSTEM MODULE ADDRESS
+OPTIONAL ASSET ADDRESS
+```
+
+Conceptual prefixes:
+
+```text
+agy1...
+agya1...
+agyv1...
+agyo1...
+agys1...
+```
+
+Exact encoding remains an implementation decision until formal specification.
+
+---
+
+# Address Is Not Identity
+
+Canonical rule:
+
+```text
+ADDRESS
+≠
+COMPLETE AI PASSPORT
+```
+
+An address is a cryptographic routing/signing identifier.
+
+An AI Passport contains richer protocol identity state.
+
+---
+
+# Agent ID
+
+AGY can use persistent identifiers independent from temporary operational keys.
+
+Example:
+
+```text
+AGENT_ID:
+AGY-AGENT-0000000001
+
+PRIMARY_ADDRESS:
+agya1...
+
+PASSPORT_VERSION:
+4
+```
+
+If a signing key rotates, the Agent ID can remain stable.
+
+---
+
+# Identity Continuity
+
+```mermaid
+flowchart LR
+    ID[Persistent Agent ID]
+    --> K1[Operational Key v1]
+    --> K2[Operational Key v2]
+    --> K3[Operational Key v3]
+
+    ID --> P[Persistent AI Passport]
+```
+
+Key rotation therefore does not require destroying reputation or mission history.
+
+---
+
+# Protocol Object IDs
+
+Important AGY objects should receive deterministic or collision-resistant identifiers.
+
+Examples:
+
+```text
+AGENT_ID
+CAPABILITY_ID
+INTENT_ID
+MISSION_ID
+DELEGATION_ID
+CONTRACT_ID
+EVIDENCE_ID
+RECEIPT_ID
+PROPOSAL_ID
+SESSION_ID
+```
+
+---
+
+# Canonical Object Hashing
+
+Concept:
+
+```text
+NORMALIZED OBJECT
+→
+CANONICAL ENCODING
+→
+DOMAIN SEPARATION
+→
+CRYPTOGRAPHIC HASH
+→
+OBJECT COMMITMENT
+```
+
+Equivalent objects must produce equivalent commitments.
+
+---
+
+# Mission State Machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> PROPOSED
+    PROPOSED --> QUALIFIED
+    QUALIFIED --> AUTHORIZED
+    AUTHORIZED --> ACCEPTED
+    ACCEPTED --> EXECUTING
+    EXECUTING --> EVIDENCE_SUBMITTED
+    EVIDENCE_SUBMITTED --> VERIFYING
+    VERIFYING --> VERIFIED
+    VERIFYING --> FAILED
+    VERIFIED --> ACCEPTED_RESULT
+    ACCEPTED_RESULT --> CLOSED
+
+    EXECUTING --> CANCELLED
+    EXECUTING --> EXPIRED
+    VERIFYING --> DISPUTED
+    DISPUTED --> VERIFYING
+```
+
+Mission transitions must be validated by protocol rules.
+
+An arbitrary client cannot jump:
+
+```text
+PROPOSED
+→
+CLOSED
+```
+
+without satisfying required intermediate conditions.
+
+---
+
+# Intent State Machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> CREATED
+    CREATED --> VALIDATING
+    VALIDATING --> AUTHORIZED
+    VALIDATING --> DENIED
+    AUTHORIZED --> EXECUTING
+    AUTHORIZED --> EXPIRED
+    EXECUTING --> COMPLETED
+    EXECUTING --> FAILED
+    DENIED --> [*]
+    COMPLETED --> [*]
+    FAILED --> [*]
+    EXPIRED --> [*]
+```
+
+---
+
+# Capability State Machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> REQUESTED
+    REQUESTED --> ISSUED
+    REQUESTED --> DENIED
+    ISSUED --> ACTIVE
+    ACTIVE --> SUSPENDED
+    ACTIVE --> EXPIRED
+    ACTIVE --> REVOKED
+    SUSPENDED --> ACTIVE
+    SUSPENDED --> REVOKED
+    EXPIRED --> [*]
+    REVOKED --> [*]
+```
+
+---
+
+# Capability Object
+
+Conceptual structure:
+
+```text
+capability_id
+subject_agent
+issuer
+capability_type
+scope
+mission_scope
+resource_scope
+issued_at
+valid_from
+expires_at
+usage_limit
+delegatable
+approval_requirement
+policy_version
+status
+```
+
+---
+
+# Delegation State
+
+Delegation is represented separately from capability ownership.
+
+```text
+DELEGATION
+=
+PARENT AUTHORITY
++
+CHILD AGENT
++
+BOUNDED CAPABILITY
++
+SCOPE
++
+TTL
++
+REVOKE PATH
+```
+
+---
+
+# Delegation Invariant
+
+The protocol must enforce:
+
+```text
+DELEGATED AUTHORITY
+⊆
+DELEGATOR AUTHORITY
+```
+
+and:
+
+```text
+CHILD CANNOT DELEGATE
+MORE THAN IT RECEIVED
+```
+
+---
+
+# Delegation Graph
+
+```mermaid
+graph TD
+    O[Root Authorized Agent]
+    -->|CODE + TEST| A[Engineering Agent]
+    -->|TEST only| B[Test Agent]
+
+    O -->|RESEARCH| C[Research Agent]
+
+    B -. cannot inherit .-> DEPLOY[DEPLOY Authority]
+```
+
+---
+
+# Evidence State
+
+Evidence objects must remain separate from claims.
+
+Conceptual object:
+
+```text
+evidence_id
+mission_id
+agent_id
+action_id
+artifact_root
+result_commitment
+submitted_at
+verification_policy
+verification_status
+verifier_set
+final_status
+```
+
+---
+
+# Verification Receipt
+
+```text
+verification_id
+evidence_id
+verifier
+verification_method
+result
+reason_code
+evidence_commitment
+timestamp
+signature
+```
+
+Allowed result classes:
+
+```text
+PASS
+FAIL
+PARTIAL
+INCONCLUSIVE
+```
+
+---
+
+# Execution Receipt
+
+Every executed transaction should produce a deterministic receipt.
+
+Conceptual receipt:
+
+```text
+transaction_hash
+block_height
+transaction_index
+sender
+transaction_type
+execution_status
+state_changes
+event_root
+resource_usage
+error_code
+result_hash
+```
+
+---
+
+# Receipt Tree
+
+```mermaid
+graph TD
+    R[Block Receipt Root]
+
+    R --> R1[Receipt Group A]
+    R --> R2[Receipt Group B]
+
+    R1 --> T1[Transaction Receipt 1]
+    R1 --> T2[Transaction Receipt 2]
+
+    R2 --> T3[Transaction Receipt 3]
+    R2 --> T4[Transaction Receipt 4]
+```
+
+Clients can verify receipt inclusion against the finalized block.
+
+---
+
+# Event System
+
+Successful state transitions can emit structured events.
+
+Examples:
+
+```text
+AgentRegistered
+AgentSuspended
+CapabilityIssued
+CapabilityRevoked
+IntentAuthorized
+MissionCreated
+MissionAccepted
+MissionClosed
+EvidenceSubmitted
+EvidenceVerified
+ReputationUpdated
+GovernanceProposalCreated
+ValidatorChanged
+```
+
+---
+
+# Event Object
+
+```text
+event_type
+block_height
+transaction_hash
+event_index
+subject
+mission_id
+payload
+payload_hash
+```
+
+Events provide indexing convenience.
+
+Canonical state remains the source of truth.
+
+---
+
+# Transaction Atomicity
+
+A transaction should either apply its defined state changes completely or fail according to deterministic protocol rules.
+
+Canonical principle:
+
+```text
+PARTIAL UNDEFINED STATE
+=
+FORBIDDEN
+```
+
+For multi-step workflows, individual stages can be represented as separate explicit protocol transitions.
+
+---
+
+# Multi-Agent Atomic Operations
+
+Where necessary, AGY can support bounded atomic operations involving multiple protocol objects.
+
+Example:
+
+```text
+MISSION ACCEPTANCE
++
+CAPABILITY LEASE
++
+SESSION CREATION
+```
+
+can be validated as one deterministic state transition when the specification requires all-or-nothing semantics.
+
+---
+
+# Resource Accounting
+
+Zero-fee does not mean zero resource measurement.
+
+Every transaction can record computational resource usage.
+
+Possible dimensions:
+
+```text
+COMPUTE_UNITS
+STATE_READS
+STATE_WRITES
+STORAGE_BYTES
+BANDWIDTH_CLASS
+SIGNATURE_CHECKS
+```
+
+These metrics are not necessarily monetary gas.
+
+---
+
+# Non-Financial Resource Metering
+
+Canonical distinction:
+
+```text
+RESOURCE COST
+≠
+FINANCIAL FEE
+```
+
+AGY can measure resource consumption while charging the user:
+
+```text
+TRANSACTION FEE:
+0
+```
+
+---
+
+# Resource Admission
+
+```mermaid
+flowchart LR
+    TX[Transaction]
+    --> ID[Identity]
+    --> CAP[Capability]
+    --> Q[Quota]
+    --> RATE[Rate Limit]
+    --> LOAD[Network Load]
+    --> A{Admit?}
+
+    A -->|YES| P[Transaction Pool]
+    A -->|NO| D[Deterministic Rejection]
+```
+
+---
+
+# Transaction Pool
+
+The pending transaction pool should prioritize:
+
+```text
+SECURITY OPERATIONS
+SYSTEM OPERATIONS
+MISSION OPERATIONS
+EVIDENCE OPERATIONS
+ROUTINE OPERATIONS
+```
+
+within explicit protocol policy.
+
+Priority cannot bypass authorization.
+
+---
+
+# Conflict Detection
+
+Transactions can declare or derive state-access sets.
+
+Example:
+
+```text
+TX-A writes:
+MISSION-1
+
+TX-B writes:
+AGENT-900
+
+TX-C writes:
+MISSION-1
+```
+
+Therefore:
+
+```text
+TX-A + TX-B
+→ parallel eligible
+
+TX-A + TX-C
+→ conflict
+→ deterministic ordering
+```
+
+---
+
+# Parallel Execution Architecture
+
+```mermaid
+flowchart TD
+    B[Finalized Transaction Batch]
+    --> D[Dependency Analyzer]
+
+    D --> L1[Execution Lane 1]
+    D --> L2[Execution Lane 2]
+    D --> L3[Execution Lane 3]
+    D --> L4[Execution Lane 4]
+
+    L1 --> M[Deterministic Merge]
+    L2 --> M
+    L3 --> M
+    L4 --> M
+
+    M --> R[New State Root]
+```
+
+Parallelism is allowed only when deterministic state equivalence is preserved.
+
+---
+
+# Protocol Modules
+
+AGY can use versioned protocol modules.
+
+Initial logical modules:
+
+```text
+agy_system
+agy_identity
+agy_capability
+agy_intent
+agy_mission
+agy_delegation
+agy_contract
+agy_evidence
+agy_verification
+agy_reputation
+agy_governance
+agy_resources
+```
+
+Optional future modules can be activated through governance.
+
+---
+
+# Module Isolation
+
+A vulnerability in one module should not automatically grant unrestricted access to every other protocol domain.
+
+Module calls should use explicit interfaces and authority checks.
+
+---
+
+# System Transactions
+
+Certain operations originate from consensus or governance rather than ordinary agents.
+
+Examples:
+
+```text
+BEGIN_BLOCK
+END_BLOCK
+VALIDATOR_SET_UPDATE
+PROTOCOL_ACTIVATION
+EMERGENCY_MODE_CHANGE
+CHECKPOINT_COMMIT
+```
+
+System transactions must be distinguishable from agent transactions.
+
+---
+
+# Genesis State
+
+Every AGY network begins from an explicit Genesis specification.
+
+Genesis can define:
+
+```text
+chain_id
+genesis_time
+protocol_version
+initial_validator_set
+initial_policy_root
+initial_system_parameters
+initial_governance
+initial_protocol_modules
+```
+
+Genesis must not contain undocumented authority.
+
+---
+
+# Genesis Architecture
+
+```mermaid
+flowchart TD
+    A[Canonical Genesis Specification]
+    --> V[Initial Validators]
+    --> P[Initial Policies]
+    --> G[Initial Governance]
+    --> M[Protocol Modules]
+    --> S[Genesis State]
+    --> R[Genesis State Root]
+    --> B[Block 0]
+```
+
+---
+
+# Genesis Reproducibility
+
+Given the same canonical Genesis input, independent tooling must generate the same:
+
+```text
+GENESIS HASH
+STATE ROOT
+VALIDATOR SET ROOT
+POLICY ROOT
+```
+
+This becomes a network identity anchor.
+
+---
+
+# Protocol Parameters
+
+Examples:
+
+```text
+BLOCK_TARGET
+MAX_BLOCK_SIZE
+MAX_TRANSACTION_SIZE
+MAX_EVIDENCE_COMMITMENT_SIZE
+MAX_MISSION_TTL
+MAX_DELEGATION_DEPTH
+DEFAULT_RATE_LIMIT
+VALIDATOR_LIMIT
+PROTOCOL_VERSION
+```
+
+Parameter changes must follow governance rules.
+
+---
+
+# Protocol Version Boundary
+
+Every state transition is evaluated under an explicit protocol version.
+
+```text
+BLOCK HEIGHT 0 - X
+→ Protocol v1
+
+ACTIVATION HEIGHT X+1
+→ Protocol v2
+```
+
+No validator should guess which rule set applies.
+
+---
+
+# State Migration
+
+For protocol upgrades:
+
+```mermaid
+flowchart LR
+    O[Old State]
+    --> V[Validate Migration Preconditions]
+    --> M[Deterministic Migration]
+    --> N[New State]
+    --> R[New State Root]
+    --> C[Consensus Verification]
+```
+
+---
+
+# State Snapshot
+
+Nodes can periodically produce snapshots containing:
+
+```text
+height
+block_hash
+state_root
+protocol_version
+validator_set_root
+policy_root
+snapshot_hash
+```
+
+Snapshots accelerate synchronization but must remain cryptographically verifiable.
+
+---
+
+# Light Client Proofs
+
+Light clients should be able to verify selected AGY state without storing the entire blockchain.
+
+Possible proof targets:
+
+```text
+AI Passport
+Capability
+Mission Status
+Evidence Receipt
+Validator Set
+Governance Result
+Reputation Commitment
+```
+
+---
+
+# Light Client Architecture
+
+```mermaid
+flowchart LR
+    V[Validator Network]
+    --> H[Finalized Header]
+    --> P[State Proof]
+    --> L[Light Client]
+    --> R[Verified Result]
+```
+
+The light client trusts cryptographic proofs and consensus assumptions, not an arbitrary RPC response.
+
+---
+
+# Indexers Are Not Consensus
+
+Canonical rule:
+
+```text
+EXPLORER DATABASE
+≠
+CANONICAL STATE
+
+INDEXER
+≠
+VALIDATOR
+
+RPC RESPONSE
+≠
+PROOF
+```
+
+When high assurance is required, clients should verify state proofs.
+
+---
+
+# Error Codes
+
+Core protocol error classes can include:
+
+```text
+AGY_INVALID_FORMAT
+AGY_INVALID_SIGNATURE
+AGY_INVALID_SEQUENCE
+AGY_EXPIRED
+AGY_WRONG_CHAIN
+AGY_UNKNOWN_AGENT
+AGY_CAPABILITY_REQUIRED
+AGY_CAPABILITY_EXPIRED
+AGY_SCOPE_VIOLATION
+AGY_MISSION_INVALID
+AGY_POLICY_DENIED
+AGY_RESOURCE_LIMIT
+AGY_STATE_CONFLICT
+AGY_PROTOCOL_VERSION_MISMATCH
+AGY_EVIDENCE_INVALID
+AGY_VERIFICATION_FAILED
+```
+
+Errors should be machine-actionable.
+
+---
+
+# Deterministic Failure
+
+A failed transaction must produce the same failure classification across honest validators.
+
+Example:
+
+```text
+INPUT:
+expired capability
+
+EXPECTED RESULT:
+AGY_CAPABILITY_EXPIRED
+
+STATE CHANGE:
+NONE
+```
+
+---
+
+# Invariants
+
+AGY core protocol should maintain formal invariants.
+
+Examples:
+
+```text
+ONE AGENT ID
+→
+ONE ACTIVE CANONICAL PASSPORT STATE
+
+REVOKED CAPABILITY
+→
+CANNOT AUTHORIZE NEW ACTION
+
+EXPIRED MISSION
+→
+CANNOT ACCEPT NEW EXECUTION
+
+CHILD DELEGATION
+⊆
+PARENT AUTHORITY
+
+UNVERIFIED EVIDENCE
+→
+CANNOT CREATE VERIFIED REPUTATION CREDIT
+
+INVALID SIGNATURE
+→
+NO STATE CHANGE
+```
+
+---
+
+# Economic Invariants
+
+Where optional assets are present:
+
+```text
+ASSET CONSERVATION
+MUST HOLD
+UNLESS AN EXPLICIT AUTHORIZED ISSUANCE OR BURN RULE APPLIES
+```
+
+AGY core functionality itself remains designed to operate without mandatory gas fees.
+
+---
+
+# Security Invariants
+
+```text
+IDENTITY ≠ AUTHORITY
+
+CAPABILITY ≠ APPROVAL
+
+INTELLIGENCE ≠ PRIVILEGE
+
+VALIDATOR POWER ≠ TREASURY POWER
+
+CLAIM ≠ EVIDENCE
+
+EVIDENCE ≠ VERIFICATION
+```
+
+These are architectural invariants, not marketing slogans.
+
+---
+
+# Formal Specification Direction
+
+Core state transitions should eventually be expressible as formal preconditions and postconditions.
+
+Example:
+
+```text
+OPERATION:
+REVOKE_CAPABILITY
+
+PRECONDITIONS:
+issuer authorized
+capability exists
+capability not already terminal
+
+POSTCONDITIONS:
+capability.status = REVOKED
+dependent delegations invalidated
+audit event emitted
+```
+
+---
+
+# Protocol Test Vector
+
+Example conceptual vector:
+
+```text
+TEST:
+Expired capability cannot authorize mission
+
+PRE_STATE:
+Agent A active
+Capability C expired
+Mission M proposed
+
+ACTION:
+Agent A accepts Mission M using Capability C
+
+EXPECTED:
+REJECT
+
+ERROR:
+AGY_CAPABILITY_EXPIRED
+
+STATE_ROOT_CHANGE:
+NONE
+```
+
+Thousands of deterministic vectors can become part of AGY compatibility testing.
+
+---
+
+# Fuzz Testing
+
+AGY core implementation should be tested against malformed protocol objects.
+
+Targets include:
+
+```text
+INVALID LENGTHS
+INVALID ENUMS
+INTEGER OVERFLOW
+DUPLICATE IDS
+MALFORMED SIGNATURES
+DEEP RECURSION
+OVERSIZED EVIDENCE
+INVALID STATE TRANSITIONS
+SEQUENCE REPLAY
+CROSS-CHAIN REPLAY
+```
+
+---
+
+# Property-Based Testing
+
+Examples:
+
+```text
+REVOKED CAPABILITY
+NEVER
+authorizes a new action.
+
+FAILED TRANSACTION
+NEVER
+changes canonical state unless explicitly defined.
+
+SAME BLOCK
+ALWAYS
+produces same state root across compatible validators.
+```
+
+---
+
+# Core Protocol Definition of Done
+
+AGY core protocol cannot receive production `VERIFIED_PASS` merely because documentation exists.
+
+Required future evidence includes:
+
+```text
+CANONICAL SPECIFICATION
++
+IMPLEMENTATION
++
+DETERMINISTIC TEST VECTORS
++
+MULTI-NODE DEVNET
++
+STATE ROOT CONSISTENCY
++
+REPLAY PROTECTION
++
+FAULT TESTING
++
+FUZZ TESTING
++
+UPGRADE TESTING
++
+SNAPSHOT RECOVERY
++
+LIGHT CLIENT PROOF TEST
++
+SECURITY REVIEW
++
+LOAD TEST
+=
+CORE PROTOCOL VERIFIED PASS
+```
+
+---
+
+# Canonical AGY Protocol Stack
+
+```mermaid
+flowchart TB
+    APP[AI Agents / Applications]
+    --> SDK[AGY SDK / Wallet / CLI]
+
+    SDK --> RPC[RPC + Streaming Layer]
+    RPC --> ADM[Admission Control]
+
+    ADM --> ID[AI Passport]
+    ADM --> CAP[Capabilities]
+    ADM --> GUARD[Guardian]
+
+    GUARD --> MEM[Transaction Pool]
+    MEM --> CONS[BFT Consensus]
+
+    CONS --> BLOCK[Finalized Blocks]
+    BLOCK --> EXEC[Deterministic Execution]
+
+    EXEC --> STATE[Canonical AGY State]
+
+    STATE --> MISS[Missions]
+    STATE --> CONT[Agent Contracts]
+    STATE --> EVID[Evidence]
+    STATE --> REP[Reputation]
+    STATE --> GOV[Governance]
+
+    STATE --> ROOT[State Root]
+    ROOT --> PROOF[State Proofs]
+    PROOF --> LIGHT[Light Clients]
+```
+
+---
+
+# AGY Core Protocol Constitution
+
+```text
+DETERMINISM
+>
+IMPLEMENTATION CONVENIENCE
+
+CANONICAL STATE
+>
+CLIENT CACHE
+
+FINALIZED BLOCK
+>
+UNCONFIRMED CLAIM
+
+ADDRESS
+≠
+COMPLETE IDENTITY
+
+IDENTITY
+≠
+AUTHORITY
+
+CAPABILITY
+≠
+APPROVAL
+
+SUBMITTED
+≠
+FINALIZED
+
+FINALIZED
+≠
+SUCCESSFUL EXECUTION
+
+RESOURCE ACCOUNTING
+≠
+FINANCIAL GAS
+
+INDEXER
+≠
+CONSENSUS
+
+RPC RESPONSE
+≠
+CRYPTOGRAPHIC PROOF
+
+SAME STATE
++
+SAME BLOCK
++
+SAME PROTOCOL VERSION
+=
+SAME RESULT
+```
+
+---
+
+# Architectural Target
+
+AGY Core Protocol architecture targets:
+
+- deterministic state transitions;
+- hierarchical state commitments;
+- native AI-agent transaction families;
+- persistent Agent IDs;
+- replay-resistant sequence numbers;
+- chain-separated signatures;
+- typed protocol objects;
+- mission state machines;
+- capability state machines;
+- bounded delegation;
+- Evidence and Verification Receipts;
+- event indexing;
+- atomic execution;
+- zero-fee resource accounting;
+- conflict-aware parallel execution;
+- modular protocol architecture;
+- reproducible Genesis;
+- protocol version boundaries;
+- deterministic state migration;
+- cryptographic snapshots;
+- light-client proofs;
+- explicit protocol invariants;
+- deterministic test vectors;
+- fuzz and property testing;
+- machine-readable failure semantics.
+
+AGY is designed so that autonomous intelligence is represented directly by protocol state rather than being reduced to ordinary wallet transfers.
+
+---
+
+## Canonical Authorship Record
+
+```text
+PROJECT:
+AGY — The Native Blockchain for Autonomous Intelligence
+
+AUTHOR & CHIEF ARCHITECT:
+Alexander Romaskevich
+
+PUBLIC SIGNATURE:
+RomaskevicH
+
+FOUNDER • OWNER • CEO • CHIEF SYSTEMS ARCHITECT:
+IMPERIAL Core
+
+ARCHITECTURAL AUTHORITY:
+Final Architectural Decision Authority
+
+PROVENANCE:
+AGY is an IMPERIAL Core technology originally authored and architected by Alexander Romaskevich.
+
+COPYRIGHT:
+Copyright © 2026 Alexander Romaskevich. All rights reserved.
+```
