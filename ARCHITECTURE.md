@@ -16,8 +16,8 @@ AI Passport
 → Capability
 → Intent
 → Mission
-→ Authorization
-→ Action
+→ Guardian Policy Decision (ALLOW / REQUIRE APPROVAL / DENY)
+→ Execution or Approval Gateway
 → Evidence
 → Verification
 → Reputation
@@ -32,6 +32,7 @@ AI Passport
 - Separation of Capability and Approval
 - Evidence-first verification model
 - Fail-closed defaults for safety-critical flows
+- **Guardian and Approval Gateway are DIFFERENT components**
 
 ---
 
@@ -44,6 +45,7 @@ AI Passport
 - Capability & Contracts
 - Intent & Mission Orchestration
 - Authorization & Guardian Gateways
+- Approval Gateway (separate from Guardian)
 - Execution Environment
 - Evidence & Verification Layer
 - Reputation & Economics
@@ -58,8 +60,12 @@ flowchart LR
   Identity --> Capability["Capability"]
   Capability --> Intent["Intent"]
   Intent --> Mission["Mission"]
-  Mission --> Authorization["Authorization / Guardian"]
-  Authorization --> Action["Action / Execution"]
+  Mission --> Authorization["Guardian Policy Decision"]
+  Authorization -->|ALLOW| Action["Execution"]
+  Authorization -->|REQUIRE APPROVAL| Approval["Approval Gateway"]
+  Authorization -->|DENY| Blocked["Blocked + Audit"]
+  Approval -->|APPROVED| Action
+  Approval -->|DENIED| Blocked
   Action --> Evidence["Evidence"]
   Evidence --> Verification["Verification"]
   Verification --> Reputation["Reputation"]
@@ -69,17 +75,17 @@ flowchart LR
 
 ## Links to detailed architecture (docs/)
 
-- [Foundation and core principles](docs/01-foundation.md) — docs/01-foundation.md
-- [Identity, capability, intent](docs/02-agent-identity-capability-intent.md) — docs/02-agent-identity-capability-intent.md
-- [Consensus and zero-fee execution model](docs/03-zero-fee-consensus-execution.md) — docs/03-zero-fee-consensus-execution.md
-- [Agent economy and contracts](docs/04-agent-economy-contracts.md) — docs/04-agent-economy-contracts.md
-- [Evidence model and security considerations](docs/05-evidence-security-audit.md) — docs/05-evidence-security-audit.md
-- [Validators, governance, recovery](docs/06-validator-governance-recovery.md) — docs/06-validator-governance-recovery.md
-- [Privacy, attestation, and data minimization](docs/07-privacy-attestation.md) — docs/07-privacy-attestation.md
-- [SDK, RPC, developer integration](docs/08-developer-platform.md) — docs/08-developer-platform.md
-- [Interop and cross-ledger patterns](docs/09-interoperability.md) — docs/09-interoperability.md
-- [Core protocol details](docs/10-core-protocol.md) — docs/10-core-protocol.md
-- [Production readiness checklist](docs/11-production-readiness.md) — docs/11-production-readiness.md
+- [Foundation and core principles](docs/01-foundation.md)
+- [Identity, capability, intent](docs/02-agent-identity-capability-intent.md)
+- [Consensus and zero-fee execution model](docs/03-zero-fee-consensus-execution.md)
+- [Agent economy and contracts](docs/04-agent-economy-contracts.md)
+- [Evidence model and security considerations](docs/05-evidence-security-audit.md)
+- [Validators, governance, recovery](docs/06-validator-governance-recovery.md)
+- [Privacy, attestation, and data minimization](docs/07-privacy-attestation.md)
+- [SDK, RPC, developer integration](docs/08-developer-platform.md)
+- [Interop and cross-ledger patterns](docs/09-interoperability.md)
+- [Core protocol details](docs/10-core-protocol.md)
+- [Production readiness checklist](docs/11-production-readiness.md)
 
 ---
 
@@ -99,7 +105,7 @@ flowchart LR
 
 **IMPERIUM** = separate digital-asset project within IMPERIAL Core
 
-**Architectural note:** Do not assume IMPERIUM tokens, gas tokens, governance tokens, validator stake, or settlement assets are the same as AGY native assets without a separate architectural decision. Relationship is explicitly designed, not automatic.
+**Architectural note:** Do not assume IMPERIUM tokens, gas tokens, governance tokens, validator stake, or settlement assets are the same as AGY native assets without a separate architectural decision.
 
 ---
 
