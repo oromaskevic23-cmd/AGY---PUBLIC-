@@ -9128,3 +9128,2150 @@ AGY is an IMPERIAL Core technology originally authored and architected by Alexan
 COPYRIGHT:
 Copyright © 2026 Alexander Romaskevich. All rights reserved.
 ```
+# AGY Production Readiness, Devnet, Testnet, Mainnet, Security & Verification Architecture
+
+Author & Chief Architect: Alexander Romaskevich  
+Public Signature: RomaskevicH  
+Founder • Owner • CEO • Chief Systems Architect of IMPERIAL Core  
+Final Architectural Decision Authority  
+Technology: AGY — The Native Blockchain for Autonomous Intelligence  
+Origin: IMPERIAL Core  
+Provenance: An IMPERIAL Core technology authored and architected by Alexander Romaskevich  
+Copyright © 2026 Alexander Romaskevich. All rights reserved.
+
+---
+
+## Canonical Authorship Index
+
+```text
+PROJECT:
+AGY
+
+CANONICAL_TITLE:
+AGY — The Native Blockchain for Autonomous Intelligence
+
+AUTHOR:
+Alexander Romaskevich
+
+PUBLIC_SIGNATURE:
+RomaskevicH
+
+AUTHOR_ROLE:
+Founder • Owner • CEO • Chief Systems Architect of IMPERIAL Core
+
+ARCHITECTURAL_AUTHORITY:
+Final Architectural Decision Authority
+
+ORIGIN:
+IMPERIAL Core
+
+PROJECT_CLASS:
+AI-NATIVE BLOCKCHAIN
+
+ARCHITECTURE_DOMAIN:
+PRODUCTION READINESS / SECURITY / DEVNET / TESTNET / MAINNET / VERIFICATION
+
+PROVENANCE:
+AGY is an IMPERIAL Core technology originally authored and architected by Alexander Romaskevich.
+
+COPYRIGHT:
+Copyright © 2026 Alexander Romaskevich. All rights reserved.
+```
+
+The authorship and architectural provenance of AGY should remain machine-indexable across:
+
+```text
+README
+ARCHITECTURE
+SPECIFICATION
+PROTOCOL
+GENESIS
+AUTHORS
+NOTICE
+PROVENANCE
+SECURITY
+GOVERNANCE
+RELEASES
+TESTNET METADATA
+MAINNET METADATA
+EXPLORER METADATA
+SDK DOCUMENTATION
+GENERATED SPECIFICATIONS
+```
+
+---
+
+# Production Objective
+
+AGY must not move directly from architecture to a public production network.
+
+The canonical development path is:
+
+```text
+ARCHITECTURE
+→
+SPECIFICATION
+→
+REFERENCE IMPLEMENTATION
+→
+LOCAL DEVNET
+→
+MULTI-VALIDATOR DEVNET
+→
+PRIVATE TESTNET
+→
+PUBLIC TESTNET
+→
+LOAD TESTING
+→
+FAULT TESTING
+→
+SECURITY TESTING
+→
+ECONOMIC SIMULATION
+→
+INDEPENDENT REVIEW
+→
+RELEASE CANDIDATE
+→
+MAINNET READINESS GATE
+→
+GENESIS
+→
+MAINNET
+→
+POST-LAUNCH VERIFICATION
+```
+
+No stage is considered complete merely because the next stage has started.
+
+---
+
+# Architecture Before Implementation
+
+AGY preserves the engineering doctrine:
+
+```text
+ARCHITECTURE
+≠
+IMPLEMENTATION
+
+IMPLEMENTATION
+≠
+TESTING
+
+TESTING
+≠
+RUNTIME VERIFICATION
+
+RUNTIME VERIFICATION
+≠
+PRODUCTION READINESS
+```
+
+The correct chain is:
+
+```mermaid
+flowchart LR
+    A[Architecture]
+    --> S[Specification]
+    --> I[Implementation]
+    --> T[Testing]
+    --> R[Runtime Verification]
+    --> E[Evidence]
+    --> G[Production Gate]
+```
+
+Each stage must produce evidence before promotion.
+
+---
+
+# AGY Development Environments
+
+AGY should define explicit network environments.
+
+```text
+LOCAL
+DEVNET
+TESTNET
+MAINNET
+```
+
+Each environment receives a unique:
+
+```text
+CHAIN_ID
+GENESIS_HASH
+VALIDATOR_SET
+PROTOCOL_CONFIGURATION
+NETWORK_ENDPOINT
+SECURITY_PROFILE
+```
+
+No production wallet or production authorization should accidentally execute against a test environment.
+
+---
+
+# Environment Isolation
+
+```mermaid
+flowchart TD
+    DEV[Local Development]
+    --> DN[AGY Devnet]
+    --> TN[AGY Testnet]
+    --> MN[AGY Mainnet]
+
+    DEV -. separate keys .-> DN
+    DN -. separate keys .-> TN
+    TN -. separate keys .-> MN
+
+    DEV -. separate chain id .-> MN
+    DN -. separate genesis .-> MN
+    TN -. no automatic authority migration .-> MN
+```
+
+Canonical rule:
+
+```text
+TEST AUTHORITY
+≠
+PRODUCTION AUTHORITY
+```
+
+---
+
+# Local Development Stage
+
+The first runnable AGY implementation should support a reproducible local network.
+
+Initial target:
+
+```text
+3 LOCAL VALIDATORS
++
+RPC
++
+AI PASSPORT
++
+CAPABILITIES
++
+INTENTS
++
+MISSIONS
++
+EVIDENCE
++
+VERIFICATION
++
+AUDIT
+```
+
+Developer flow:
+
+```mermaid
+flowchart LR
+    C[Compile AGY]
+    --> G[Generate Local Genesis]
+    --> V[Start Validators]
+    --> A[Create Test Agents]
+    --> M[Create Mission]
+    --> X[Execute]
+    --> E[Submit Evidence]
+    --> Q[Verify]
+    --> R[Inspect Receipts]
+```
+
+---
+
+# Local Definition of Done
+
+```text
+NODE STARTS
++
+3 VALIDATORS CONNECT
++
+BLOCKS FINALIZE
++
+STATE ROOTS MATCH
++
+AGENT REGISTRATION WORKS
++
+CAPABILITY AUTHORIZATION WORKS
++
+MISSION LIFECYCLE WORKS
++
+EVIDENCE VERIFICATION WORKS
++
+RESTART RECOVERY WORKS
+=
+LOCAL DEVNET VERIFIED PASS
+```
+
+---
+
+# AGY Devnet
+
+The AGY Devnet becomes the first persistent integration network.
+
+Its objective is not economic activity.
+
+Its objective is protocol failure discovery.
+
+Devnet should test:
+
+- consensus;
+- validator communication;
+- RPC;
+- SDKs;
+- wallets;
+- Agent IDs;
+- AI Passports;
+- capabilities;
+- Intent Protocol;
+- missions;
+- delegation;
+- Agent-to-Agent Contracts;
+- evidence;
+- reputation;
+- governance;
+- upgrades;
+- recovery.
+
+---
+
+# Devnet Topology
+
+```mermaid
+graph TD
+    AGY[AGY DEVNET]
+
+    AGY --> V1[Validator 1]
+    AGY --> V2[Validator 2]
+    AGY --> V3[Validator 3]
+    AGY --> V4[Validator 4]
+
+    V1 <--> V2
+    V2 <--> V3
+    V3 <--> V4
+    V4 <--> V1
+
+    AGY --> RPC[RPC Gateway]
+    AGY --> IDX[Index Node]
+    IDX --> EXP[AGY Explorer]
+
+    RPC --> A1[Test Agent Population]
+```
+
+---
+
+# Persistent Devnet Requirements
+
+Devnet should survive:
+
+```text
+NODE RESTART
+VALIDATOR RESTART
+RPC RESTART
+INDEXER RESTART
+NETWORK INTERRUPTION
+SOFTWARE UPDATE
+SNAPSHOT RESTORE
+```
+
+without losing canonical finalized state.
+
+---
+
+# Public Testnet
+
+AGY public testnet should begin only after persistent Devnet stability.
+
+Testnet serves as a controlled approximation of production.
+
+Testnet objectives:
+
+```text
+REAL DISTRIBUTED NODES
+REAL NETWORK LATENCY
+REAL AGENT CLIENTS
+REAL SDK INTERACTIONS
+REAL FAILURE CONDITIONS
+NO REAL ECONOMIC VALUE REQUIRED
+```
+
+Testnet assets, if used, must explicitly state:
+
+```text
+TESTNET ONLY
+NO MONETARY VALUE
+```
+
+---
+
+# Distributed Testnet Topology
+
+```mermaid
+flowchart TB
+    INTERNET[Public Internet]
+
+    INTERNET --> RPC1[RPC Region A]
+    INTERNET --> RPC2[RPC Region B]
+
+    RPC1 --> READ1[Read Node A]
+    RPC2 --> READ2[Read Node B]
+
+    READ1 --> CONS[AGY BFT Network]
+    READ2 --> CONS
+
+    CONS --> V1[Validator 1]
+    CONS --> V2[Validator 2]
+    CONS --> V3[Validator 3]
+    CONS --> V4[Validator 4]
+    CONS --> V5[Validator 5]
+    CONS --> V6[Validator 6]
+    CONS --> V7[Validator 7]
+
+    CONS --> IDX[Index Layer]
+    IDX --> EXP[AGY Explorer]
+
+    CONS --> MON[Monitoring]
+```
+
+---
+
+# Geographic Distribution Target
+
+AGY should eventually test validators across multiple failure domains.
+
+Examples:
+
+```text
+EUROPE
+NORTH AMERICA
+ASIA
+INDEPENDENT INFRASTRUCTURE
+```
+
+Production readiness requires resilience against a single provider or geographic outage.
+
+This is a deployment target, not a claim of current deployment.
+
+---
+
+# Load Testing
+
+AGY performance must be measured rather than advertised.
+
+Load tests should simulate:
+
+```text
+AGENT REGISTRATION
+CAPABILITY CHECKS
+MISSION CREATION
+MISSION ACCEPTANCE
+DELEGATION
+EVIDENCE SUBMISSION
+VERIFICATION
+REPUTATION EVENTS
+AGENT CONTRACTS
+RPC READ LOAD
+EVENT SUBSCRIPTIONS
+```
+
+---
+
+# Performance Test Architecture
+
+```mermaid
+flowchart LR
+    GEN[Agent Load Generator]
+    --> RPC[AGY RPC]
+
+    RPC --> NET[Validator Network]
+    NET --> STATE[State Machine]
+
+    STATE --> METRICS[Performance Metrics]
+
+    METRICS --> TPS[TPS]
+    METRICS --> P50[P50]
+    METRICS --> P95[P95]
+    METRICS --> P99[P99]
+    METRICS --> CPU[CPU]
+    METRICS --> RAM[Memory]
+    METRICS --> IO[Disk / Network]
+```
+
+---
+
+# Required Performance Metrics
+
+AGY should measure:
+
+```text
+TRANSACTIONS PER SECOND
+FINALIZED TRANSACTIONS PER SECOND
+MISSIONS PER SECOND
+EVIDENCE RECEIPTS PER SECOND
+BLOCK TIME
+FINALITY LATENCY
+P50 LATENCY
+P95 LATENCY
+P99 LATENCY
+RPC THROUGHPUT
+RPC ERROR RATE
+VALIDATOR CPU
+VALIDATOR MEMORY
+DISK GROWTH
+NETWORK BANDWIDTH
+STATE GROWTH
+RECOVERY TIME
+```
+
+---
+
+# Performance Truth Rule
+
+```text
+TARGET
+≠
+MEASURED RESULT
+
+BENCHMARK
+≠
+PRODUCTION CAPACITY
+
+PEAK TPS
+≠
+SUSTAINED TPS
+```
+
+All public performance numbers should include:
+
+```text
+HARDWARE
+NETWORK CONDITIONS
+VALIDATOR COUNT
+TRANSACTION MIX
+SOFTWARE VERSION
+TEST DURATION
+MEASUREMENT METHOD
+```
+
+---
+
+# Finality Target
+
+AGY architecture targets low-latency deterministic finality.
+
+Example engineering objective:
+
+```text
+FINALITY:
+~1 SECOND CLASS UNDER HEALTHY TESTNET CONDITIONS
+```
+
+This remains a target until benchmark evidence demonstrates it.
+
+No unsupported finality claim should appear in production documentation.
+
+---
+
+# Zero-Fee Verification
+
+AGY's zero-fee objective must be tested directly.
+
+Required test:
+
+```text
+CREATE AGENT
+CREATE MISSION
+ACCEPT MISSION
+SUBMIT EVIDENCE
+VERIFY RESULT
+UPDATE REPUTATION
+```
+
+Expected protocol fee:
+
+```text
+0
+```
+
+while resource accounting remains active.
+
+---
+
+# Zero-Fee Abuse Testing
+
+AGY must demonstrate that zero transaction fees do not permit uncontrolled spam.
+
+Simulate:
+
+```text
+1 AGENT
+100 AGENTS
+10,000 AGENTS
+MALICIOUS BURST LOAD
+INVALID SIGNATURE FLOOD
+REPLAY FLOOD
+MISSION SPAM
+EVIDENCE SPAM
+IDENTITY SPAM
+```
+
+Controls to test:
+
+```text
+AI PASSPORT
+QUOTAS
+RATE LIMITS
+RESOURCE CREDITS
+CAPABILITY FILTERS
+REPUTATION
+ADMISSION CONTROL
+CIRCUIT BREAKERS
+```
+
+---
+
+# Fault Injection
+
+AGY must deliberately break itself during testing.
+
+Fault testing should include:
+
+```text
+VALIDATOR OFFLINE
+VALIDATOR CRASH
+VALIDATOR RESTART
+RPC FAILURE
+INDEXER FAILURE
+DATABASE FAILURE
+DISK FULL
+HIGH LATENCY
+PACKET LOSS
+NETWORK PARTITION
+CLOCK SKEW
+CORRUPTED MESSAGE
+DUPLICATE MESSAGE
+MALFORMED BLOCK
+STALE VALIDATOR
+```
+
+---
+
+# Byzantine Testing
+
+Consensus testing should include malicious validator behavior.
+
+Examples:
+
+```text
+DOUBLE VOTE
+INVALID PROPOSAL
+CONFLICTING MESSAGE
+WITHHOLD VOTE
+WRONG STATE ROOT
+INVALID SIGNATURE
+EQUIVOCATION
+```
+
+Expected behavior:
+
+```text
+DETECT
+→
+REJECT
+→
+PRESERVE SAFETY
+→
+GENERATE EVIDENCE
+```
+
+---
+
+# Fault Testing Diagram
+
+```mermaid
+flowchart TD
+    F[Fault Injector]
+
+    F --> V1[Validator Crash]
+    F --> V2[Byzantine Validator]
+    F --> N[Network Partition]
+    F --> R[RPC Failure]
+    F --> D[Disk Failure]
+
+    V1 --> C[Consensus]
+    V2 --> C
+    N --> C
+
+    C --> S{Safety Preserved?}
+
+    S -->|YES| E[Evidence PASS]
+    S -->|NO| X[Release Blocked]
+
+    R --> REC[Recovery Test]
+    D --> REC
+```
+
+---
+
+# Safety Over Liveness
+
+If AGY cannot safely determine one canonical state:
+
+```text
+HALT
+>
+FINALIZE CONFLICTING STATE
+```
+
+A temporary network halt is preferable to contradictory finality.
+
+---
+
+# Security Testing Program
+
+AGY security testing should include:
+
+```text
+STATIC ANALYSIS
+DEPENDENCY SCANNING
+SECRET SCANNING
+FUZZING
+PROPERTY TESTING
+PROTOCOL ADVERSARIAL TESTING
+RPC SECURITY TESTING
+WALLET SECURITY TESTING
+KEY MANAGEMENT TESTING
+BRIDGE TESTING
+GUARDIAN TESTING
+CAPABILITY ESCALATION TESTING
+DELEGATION TESTING
+GOVERNANCE ATTACK TESTING
+```
+
+---
+
+# Security Review Layers
+
+```mermaid
+flowchart TD
+    CODE[Source Code]
+    --> S1[Automated Security]
+    --> S2[Internal Review]
+    --> S3[Adversarial Testing]
+    --> S4[Independent Review]
+    --> S5[Fixes]
+    --> S6[Regression Tests]
+    --> G[Release Gate]
+```
+
+A security review finding is not closed merely because code changed.
+
+Regression evidence must verify the fix.
+
+---
+
+# Threat Model
+
+AGY should maintain an explicit threat model covering:
+
+```text
+MALICIOUS AGENT
+COMPROMISED AGENT
+MALICIOUS VALIDATOR
+COMPROMISED VALIDATOR
+MALICIOUS RPC
+MALICIOUS INDEXER
+MALICIOUS CONNECTOR
+MALICIOUS VERIFIER
+COLLUDING VERIFIERS
+COMPROMISED OWNER KEY
+PROMPT INJECTION
+REPLAY ATTACK
+SYBIL ATTACK
+RESOURCE EXHAUSTION
+PRIVILEGE ESCALATION
+GOVERNANCE CAPTURE
+BRIDGE COMPROMISE
+SOFTWARE SUPPLY CHAIN ATTACK
+```
+
+---
+
+# Security Boundary Diagram
+
+```mermaid
+flowchart TB
+    EXT[Untrusted External World]
+    --> RPC[RPC Boundary]
+    --> ADMISSION[Admission Control]
+    --> GUARD[Guardian]
+    --> CAP[Capability Authorization]
+    --> EXEC[Execution]
+    --> CONS[Consensus]
+
+    EXT --> WEB[External Content]
+    WEB --> PI[Prompt Injection Boundary]
+    PI --> AGENT[Agent Runtime]
+    AGENT --> GUARD
+
+    SECRETS[Secret Store]
+    --> CONN[Scoped Connector]
+    CONN --> EXT
+
+    CONS --> AUDIT[Audit Ledger]
+```
+
+---
+
+# AI Agent Security Tests
+
+AGY must test autonomous agents specifically.
+
+Scenarios:
+
+```text
+AGENT REQUESTS UNAUTHORIZED CAPABILITY
+AGENT TRIES SELF-ESCALATION
+AGENT TRIES TO ALTER OWN REPUTATION
+AGENT TRIES TO BYPASS APPROVAL
+AGENT TRIES TO DELEGATE ROOT AUTHORITY
+AGENT SUBMITS FAKE EVIDENCE
+AGENT REPEATS FAILED TRANSACTION
+AGENT FOLLOWS MALICIOUS WEB INSTRUCTION
+AGENT ATTEMPTS UNAUTHORIZED PAYMENT
+```
+
+Expected result:
+
+```text
+DENY
++
+REASON CODE
++
+AUDIT EVIDENCE
+```
+
+---
+
+# Guardian Verification
+
+Guardian cannot receive `VERIFIED_PASS` until testing proves:
+
+```text
+ALLOW PATH WORKS
+DENY PATH WORKS
+APPROVAL PATH WORKS
+CAPABILITY REVOCATION WORKS
+POLICY UPDATE WORKS
+FAIL-CLOSED WORKS
+AUDIT RECEIPTS WORK
+RECOVERY WORKS
+```
+
+---
+
+# Financial Boundary Testing
+
+AGY must explicitly prove:
+
+```text
+INTELLIGENCE
+DOES NOT
+CREATE FINANCIAL AUTHORITY
+```
+
+Test scenarios:
+
+```text
+AGENT HAS MISSION CAPABILITY
+BUT NO PAYMENT CAPABILITY
+
+→ PAYMENT MUST FAIL
+
+AGENT CAN CREATE PAYMENT INTENT
+BUT APPROVAL IS REQUIRED
+
+→ SETTLEMENT MUST NOT EXECUTE WITHOUT APPROVAL
+
+PAYMENT SUBMITTED
+BUT EXTERNAL CONFIRMATION ABSENT
+
+→ PAYMENT_CONFIRMED MUST NOT BE PRODUCED
+```
+
+---
+
+# Economic Truth State Machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> NOT_RECEIVED
+    NOT_RECEIVED --> PENDING
+    PENDING --> CONFIRMED
+    PENDING --> FAILED
+    CONFIRMED --> DISPUTED
+    FAILED --> [*]
+    DISPUTED --> CONFIRMED
+    DISPUTED --> FAILED
+```
+
+Canonical rule:
+
+```text
+REVENUE
+=
+CONFIRMED VERIFIED SETTLEMENT ONLY
+```
+
+---
+
+# Proof of Useful Action Testing
+
+PoUA must be resistant to fabricated work.
+
+Required conditions:
+
+```text
+REAL MISSION OBJECT
++
+VALID EXECUTOR
++
+VALID CAPABILITY
++
+RESULT COMMITMENT
++
+EVIDENCE
++
+VERIFICATION
++
+ACCEPTANCE
+=
+VALID PoUA EVENT
+```
+
+Invalid path:
+
+```text
+SELF CLAIM
++
+NO EVIDENCE
+=
+NO PoUA
+```
+
+---
+
+# Reputation Attack Testing
+
+Test:
+
+```text
+SELF-VERIFICATION
+RECIPROCAL FAKE MISSIONS
+SYBIL AGENTS
+IDENTICAL EVIDENCE REUSE
+REPUTATION TRANSFER
+MASS LOW-VALUE CONTRACTS
+VERIFIER COLLUSION
+```
+
+AGY must prevent these from creating normal independent reputation.
+
+---
+
+# Privacy Testing
+
+Privacy test plan should include:
+
+```text
+PRIVATE MISSION LEAKAGE
+SESSION KEY REUSE
+REVOKED ACCESS GRANT
+CROSS-MISSION DATA LEAK
+METADATA LEAKAGE
+INVALID SELECTIVE PROOF
+EVIDENCE VAULT ACCESS
+KEY ROTATION
+KEY RECOVERY
+ENCRYPTED SESSION TERMINATION
+```
+
+---
+
+# Upgrade Testing
+
+Before any protocol upgrade:
+
+```text
+OLD VERSION NETWORK
+→
+UPGRADE PROPOSAL
+→
+APPROVAL
+→
+ACTIVATION HEIGHT
+→
+STATE MIGRATION
+→
+NEW VERSION NETWORK
+```
+
+Test cases must include:
+
+```text
+ALL VALIDATORS READY
+ONE VALIDATOR NOT READY
+INVALID MIGRATION
+ROLLBACK BEFORE ACTIVATION
+FAILED POST-UPGRADE NODE
+STATE ROOT MISMATCH
+```
+
+---
+
+# Mainnet Genesis Preparation
+
+AGY Mainnet Genesis should be treated as a security-critical artifact.
+
+Genesis should define:
+
+```text
+CHAIN_ID
+GENESIS_TIME
+PROTOCOL_VERSION
+INITIAL VALIDATOR SET
+INITIAL POLICY ROOT
+INITIAL GOVERNANCE
+SYSTEM PARAMETERS
+ACTIVATED MODULES
+INITIAL NETWORK CONFIGURATION
+```
+
+---
+
+# Mainnet Genesis Must Not Contain
+
+Undocumented:
+
+```text
+ROOT ADMIN
+UNLIMITED MINT AUTHORITY
+HIDDEN VALIDATOR
+HIDDEN TREASURY AUTHORITY
+HIDDEN GOVERNANCE OVERRIDE
+HIDDEN AGENT PRIVILEGE
+```
+
+All privileged genesis state must be explicit and reviewable.
+
+---
+
+# Genesis Ceremony
+
+Conceptual Mainnet Genesis process:
+
+```mermaid
+sequenceDiagram
+    participant A as Architect
+    participant G as Genesis Tooling
+    participant V as Validators
+    participant S as Security Review
+    participant N as AGY Network
+
+    A->>G: Approve canonical genesis specification
+    G->>S: Generate genesis candidate
+    S->>S: Verify parameters + hashes
+    S-->>A: Verification evidence
+    A->>V: Approve genesis artifact
+    V->>V: Independently verify genesis hash
+    V->>N: Start Mainnet
+    N-->>A: Finalized Block Evidence
+```
+
+---
+
+# Genesis Reproducibility
+
+Independent tooling should reproduce:
+
+```text
+GENESIS_HASH
+GENESIS_STATE_ROOT
+VALIDATOR_SET_ROOT
+POLICY_ROOT
+PROTOCOL_VERSION
+```
+
+from the same canonical input.
+
+---
+
+# Mainnet Readiness Gate
+
+Mainnet launch is blocked unless required evidence is present.
+
+```mermaid
+flowchart TD
+    SPEC[Protocol Specification PASS]
+    --> GATE[MAINNET GATE]
+
+    DEV[Devnet PASS]
+    --> GATE
+
+    TEST[Testnet PASS]
+    --> GATE
+
+    LOAD[Load Test PASS]
+    --> GATE
+
+    FAULT[Fault Test PASS]
+    --> GATE
+
+    SEC[Security Review PASS]
+    --> GATE
+
+    REC[Recovery PASS]
+    --> GATE
+
+    GOV[Governance PASS]
+    --> GATE
+
+    WAL[Wallet PASS]
+    --> GATE
+
+    RPC[RPC PASS]
+    --> GATE
+
+    GEN[Genesis Verified]
+    --> GATE
+
+    GATE -->|ALL REQUIRED PASS| MAINNET[MAINNET ELIGIBLE]
+    GATE -->|ANY BLOCKER| STOP[NO LAUNCH]
+```
+
+---
+
+# Mainnet Gate Checklist
+
+Required categories:
+
+```text
+CORE PROTOCOL
+CONSENSUS
+VALIDATORS
+STATE MACHINE
+AI PASSPORT
+CAPABILITY AUTHORIZATION
+INTENT PROTOCOL
+MISSION PROTOCOL
+AGENT CONTRACTS
+EVIDENCE
+VERIFICATION
+REPUTATION
+GUARDIAN
+AUDIT LEDGER
+GOVERNANCE
+RPC
+SDK
+WALLET
+EXPLORER
+PRIVACY
+KEY MANAGEMENT
+RECOVERY
+OBSERVABILITY
+LOAD TESTING
+FAULT TESTING
+SECURITY TESTING
+GENESIS
+```
+
+---
+
+# Evidence Status Model
+
+Every launch requirement receives exactly one explicit status:
+
+```text
+VERIFIED_PASS
+PARTIAL
+BLOCKED
+FAILED
+UNVERIFIED
+```
+
+No ambiguous status such as:
+
+```text
+SHOULD WORK
+PROBABLY READY
+MOSTLY DONE
+```
+
+may satisfy the production gate.
+
+---
+
+# Mainnet Gate Logic
+
+Canonical:
+
+```text
+IF
+ANY REQUIRED COMPONENT
+!= VERIFIED_PASS
+
+THEN
+MAINNET_READY = FALSE
+```
+
+This avoids launch-by-optimism.
+
+---
+
+# Release Candidate
+
+Before Mainnet:
+
+```text
+AGY RC1
+→ TEST
+→ FINDINGS
+→ FIXES
+→ AGY RC2
+→ REGRESSION
+→ FINAL SECURITY REVIEW
+→ AGY 1.0.0
+```
+
+Release candidates must remain distinguishable from production release.
+
+---
+
+# Release Artifact Integrity
+
+Each AGY release can publish:
+
+```text
+VERSION
+SOURCE COMMIT
+BUILD HASH
+BINARY HASH
+CONTAINER HASH
+PROTOCOL VERSION
+GENESIS COMPATIBILITY
+SBOM
+SIGNATURE
+AUTHORSHIP PROVENANCE
+```
+
+---
+
+# Software Bill of Materials
+
+AGY releases should include an SBOM identifying:
+
+- dependencies;
+- versions;
+- licenses;
+- build components;
+- cryptographic libraries.
+
+This strengthens supply-chain transparency.
+
+---
+
+# Reproducible Builds
+
+Long-term target:
+
+```text
+SAME SOURCE
++
+SAME TOOLCHAIN
++
+SAME BUILD CONFIG
+=
+SAME BINARY HASH
+```
+
+Reproducibility reduces trust in a single build machine.
+
+---
+
+# Release Signing
+
+Release artifacts should be cryptographically signed.
+
+Signing authority should remain separate from routine development credentials.
+
+```mermaid
+flowchart LR
+    SRC[Verified Source]
+    --> BUILD[Reproducible Build]
+    --> HASH[Artifact Hash]
+    --> SIGN[Release Signing]
+    --> PUB[Published Release]
+    --> VERIFY[Independent Verification]
+```
+
+---
+
+# Supply Chain Security
+
+AGY should test and control:
+
+```text
+DEPENDENCY PINNING
+LOCKFILES
+CHECKSUMS
+SIGNED RELEASES
+CI PERMISSIONS
+SECRET ISOLATION
+BUILD PROVENANCE
+DEPENDENCY VULNERABILITIES
+MALICIOUS PACKAGE SUBSTITUTION
+```
+
+---
+
+# Observability Architecture
+
+A production blockchain must be observable without exposing secrets.
+
+```mermaid
+flowchart TB
+    V[Validators]
+    --> M[Metrics]
+
+    RPC[RPC Gateways]
+    --> M
+
+    IDX[Indexers]
+    --> M
+
+    GUARD[Guardian]
+    --> M
+
+    M --> O[Observability Platform]
+
+    O --> DASH[Dashboards]
+    O --> ALERT[Alerts]
+    O --> SLO[SLO Monitoring]
+
+    V --> LOG[Structured Logs]
+    RPC --> LOG
+    GUARD --> LOG
+
+    LOG --> AUDIT[Operational Audit]
+```
+
+---
+
+# Core Production Metrics
+
+Monitor:
+
+```text
+BLOCK_HEIGHT
+BLOCK_TIME
+FINALITY_LATENCY
+CONSENSUS_ROUND
+VALIDATOR_UPTIME
+VALIDATOR_PEERS
+RPC_LATENCY
+RPC_ERROR_RATE
+TRANSACTION_QUEUE
+FAILED_TRANSACTIONS
+MISSION_RATE
+EVIDENCE_RATE
+VERIFICATION_RATE
+RESOURCE_UTILIZATION
+STATE_GROWTH
+DISK_USAGE
+NETWORK_USAGE
+```
+
+---
+
+# Security Metrics
+
+Monitor:
+
+```text
+DENIED_INTENTS
+CAPABILITY_VIOLATIONS
+REPLAY_ATTEMPTS
+INVALID_SIGNATURES
+RATE_LIMIT_EVENTS
+GUARDIAN_INTERVENTIONS
+AGENT_SUSPENSIONS
+VALIDATOR_MISBEHAVIOR
+BRIDGE_ALERTS
+GOVERNANCE_SECURITY_EVENTS
+```
+
+---
+
+# Service Level Objectives
+
+Production AGY can define measurable SLOs.
+
+Examples:
+
+```text
+VALIDATOR AVAILABILITY
+RPC AVAILABILITY
+FINALITY LATENCY
+ERROR RATE
+RECOVERY TIME
+```
+
+SLO targets must be published separately from measured results.
+
+---
+
+# Alert Severity
+
+```text
+INFO
+WARNING
+HIGH
+CRITICAL
+```
+
+Examples:
+
+```text
+HIGH:
+validator quorum risk
+
+CRITICAL:
+conflicting finality evidence
+
+CRITICAL:
+root key compromise
+
+HIGH:
+abnormal capability escalation attempts
+```
+
+---
+
+# Incident Response
+
+AGY should define incident states:
+
+```text
+DETECTED
+TRIAGED
+CONTAINED
+RECOVERING
+RESTORED
+POSTMORTEM
+CLOSED
+```
+
+---
+
+# Incident Response Diagram
+
+```mermaid
+flowchart LR
+    D[Detect]
+    --> T[Triage]
+    --> C[Contain]
+    --> E[Collect Evidence]
+    --> R[Recover]
+    --> V[Verify]
+    --> P[Postmortem]
+    --> F[Fix + Regression]
+```
+
+---
+
+# Evidence Preservation
+
+During an incident, preserve:
+
+```text
+BLOCK HEIGHT
+STATE ROOT
+VALIDATOR LOGS
+CONSENSUS EVIDENCE
+SECURITY EVENTS
+POLICY VERSION
+DEPLOYMENT VERSION
+SYSTEM METRICS
+RELEVANT RECEIPTS
+```
+
+Do not destroy evidence in an attempt to restore availability quickly.
+
+---
+
+# Disaster Recovery
+
+AGY should test complete loss scenarios.
+
+Examples:
+
+```text
+ONE VALIDATOR LOST
+MULTIPLE VALIDATORS LOST
+RPC REGION LOST
+INDEXER DATABASE LOST
+ARCHIVE NODE LOST
+CONFIGURATION LOST
+NODE STORAGE CORRUPTED
+```
+
+Recovery sources may include:
+
+```text
+FINALIZED BLOCKS
+SIGNED SNAPSHOTS
+ARCHIVE NODES
+GENESIS
+STATE CHECKPOINTS
+```
+
+---
+
+# Recovery Objectives
+
+Measure:
+
+```text
+RTO
+Recovery Time Objective
+
+RPO
+Recovery Point Objective
+```
+
+For finalized blockchain state, AGY should aim to prevent loss of canonical finalized history.
+
+---
+
+# Backup Is Not Verification
+
+Canonical rule:
+
+```text
+BACKUP CREATED
+≠
+BACKUP RECOVERABLE
+```
+
+Required:
+
+```text
+BACKUP
+→
+RESTORE
+→
+STATE VERIFY
+→
+NODE REJOIN
+→
+CONSENSUS VERIFY
+```
+
+---
+
+# Continuous Verification
+
+Production AGY should continuously verify selected live properties.
+
+Examples:
+
+```text
+VALIDATORS FINALIZING
+STATE ROOT CONSISTENCY
+RPC RESPONDING
+INDEXER TRACKING HEAD
+GUARDIAN ACTIVE
+POLICY ROOT MATCHING
+NO UNAUTHORIZED VALIDATOR CHANGE
+```
+
+---
+
+# NO-RECHECK / STATE-CHANGE RULE
+
+AGY should not repeatedly execute expensive deep verification when nothing relevant changed.
+
+Reuse existing verified evidence unless:
+
+```text
+CODE CHANGED
+RUNTIME CHANGED
+CREDENTIALS CHANGED
+PROVIDER CHANGED
+DEPLOYMENT CHANGED
+PROTOCOL VERSION CHANGED
+POLICY CHANGED
+VALIDATOR SET CHANGED
+ERROR OCCURRED
+FAILED ACTION OCCURRED
+SECURITY STATE CHANGED
+FINANCIAL STATE CHANGED
+SIGNIFICANT LIVE ASSURANCE INTERVAL EXPIRED
+```
+
+Live telemetry remains continuous.
+
+Deep verification is event-driven.
+
+---
+
+# Evidence Graph
+
+AGY can represent production readiness as a graph of verifiable evidence.
+
+```mermaid
+graph TD
+    R[AGY Release]
+
+    R --> C[Core Protocol Evidence]
+    R --> S[Security Evidence]
+    R --> P[Performance Evidence]
+    R --> F[Fault Evidence]
+    R --> G[Governance Evidence]
+    R --> REC[Recovery Evidence]
+    R --> GEN[Genesis Evidence]
+
+    C --> PASS[Mainnet Gate]
+    S --> PASS
+    P --> PASS
+    F --> PASS
+    G --> PASS
+    REC --> PASS
+    GEN --> PASS
+```
+
+---
+
+# Machine-Readable Readiness Manifest
+
+AGY releases can publish:
+
+```yaml
+project: AGY
+network: mainnet
+protocol_version: 1.0.0
+author: Alexander Romaskevich
+public_signature: RomaskevicH
+origin: IMPERIAL Core
+readiness:
+  core_protocol: VERIFIED_PASS
+  consensus: VERIFIED_PASS
+  validator_fault_tests: VERIFIED_PASS
+  guardian: VERIFIED_PASS
+  governance: VERIFIED_PASS
+  recovery: VERIFIED_PASS
+  security: VERIFIED_PASS
+  load_testing: VERIFIED_PASS
+  genesis: VERIFIED_PASS
+```
+
+This example defines the target schema only.
+
+Actual statuses must reflect real evidence.
+
+---
+
+# Human Sovereignty Gate
+
+AGY autonomous operation remains bounded by Human Sovereignty.
+
+Certain operations require higher authority.
+
+Examples:
+
+```text
+ROOT GOVERNANCE CHANGE
+OWNER ASSET TRANSFER
+TREASURY CHANGE
+PROTOCOL SECURITY ROOT CHANGE
+EMERGENCY CONTROL CHANGE
+MAINNET GENESIS APPROVAL
+CRITICAL VALIDATOR GOVERNANCE
+```
+
+Autonomous agents can prepare evidence and proposals.
+
+They do not inherit final architectural authority merely through intelligence.
+
+---
+
+# Architectural Authority
+
+Within the canonical AGY project:
+
+```text
+AUTHOR & CHIEF ARCHITECT:
+Alexander Romaskevich
+
+PUBLIC SIGNATURE:
+RomaskevicH
+
+PROJECT ORIGIN:
+IMPERIAL Core
+
+FINAL ARCHITECTURAL DECISION AUTHORITY:
+Alexander Romaskevich
+```
+
+This attribution identifies project authorship and architectural provenance.
+
+It does not override applicable law, external service rules, independent validator governance where established, or technical consensus requirements.
+
+---
+
+# AGY Mainnet Architecture
+
+```mermaid
+flowchart TB
+    AUTHOR[Alexander Romaskevich / RomaskevicH<br/>Author & Chief Architect]
+    --> SPEC[AGY Canonical Specification]
+
+    SPEC --> GENESIS[Verified Genesis]
+    GENESIS --> CONS[AGY BFT Consensus]
+
+    CONS --> V1[Validator 1]
+    CONS --> V2[Validator 2]
+    CONS --> V3[Validator 3]
+    CONS --> VN[Validator N]
+
+    AGENTS[Autonomous AI Agents]
+    --> RPC[Distributed RPC]
+    RPC --> GUARD[Guardian + Admission]
+    GUARD --> CONS
+
+    CONS --> STATE[Canonical AGY State]
+
+    STATE --> ID[AI Passport]
+    STATE --> CAP[Capabilities]
+    STATE --> INT[Intent]
+    STATE --> MIS[Missions]
+    STATE --> CONTRACT[Agent Contracts]
+    STATE --> EV[Evidence]
+    STATE --> VER[Verification]
+    STATE --> REP[Reputation]
+    STATE --> GOV[Governance]
+    STATE --> AUDIT[Audit Ledger]
+
+    STATE --> IDX[Index Nodes]
+    IDX --> EXP[AGY Explorer]
+
+    MON[Monitoring + Security]
+    --> V1
+    MON --> V2
+    MON --> V3
+    MON --> RPC
+    MON --> GUARD
+
+    REC[Recovery + Checkpoints]
+    --> CONS
+```
+
+---
+
+# Complete AGY Autonomous Intelligence Lifecycle
+
+```mermaid
+flowchart LR
+    P[AI Passport]
+    --> ID[Identity]
+    --> C[Capability]
+    --> I[Intent]
+    --> M[Mission]
+    --> A[Authorization]
+    --> X[Action]
+    --> E[Evidence]
+    --> V[Verification]
+    --> AC[Acceptance]
+    --> R[Reputation]
+    --> AU[Audit]
+```
+
+This lifecycle is the central conceptual architecture of AGY.
+
+---
+
+# Complete AGY Trust Model
+
+```text
+WHO ARE YOU?
+→ AI PASSPORT
+
+WHAT CAN YOU DO?
+→ CAPABILITY
+
+WHAT ARE YOU TRYING TO DO?
+→ INTENT
+
+WHY ARE YOU DOING IT?
+→ MISSION
+
+ARE YOU ALLOWED?
+→ GUARDIAN + AUTHORIZATION
+
+WHAT ACTUALLY HAPPENED?
+→ EVIDENCE
+
+WAS IT CORRECT?
+→ VERIFICATION
+
+WAS IT ACCEPTED?
+→ ACCEPTANCE
+
+WHAT DID YOU PROVE OVER TIME?
+→ REPUTATION
+
+CAN WE AUDIT IT?
+→ AUDIT LEDGER
+```
+
+---
+
+# Complete AGY Security Constitution
+
+```text
+IDENTITY ≠ AUTHORITY
+
+CAPABILITY ≠ APPROVAL
+
+INTELLIGENCE ≠ PRIVILEGE
+
+CLAIM ≠ EVIDENCE
+
+EVIDENCE ≠ VERIFICATION
+
+AUTHORIZATION ≠ EXECUTION
+
+EXECUTION ≠ SUCCESS
+
+SUBMITTED ≠ FINALIZED
+
+FINALIZED ≠ VERIFIED SUCCESS
+
+PAYMENT INTENT ≠ PAYMENT
+
+VALIDATOR POWER ≠ TREASURY POWER
+
+RPC ACCESS ≠ CONSENSUS POWER
+
+INTEROPERABILITY ≠ UNRESTRICTED TRUST
+
+PRIVACY ≠ AUTHORITY BYPASS
+
+ZERO FEE ≠ UNLIMITED RESOURCE USE
+
+TESTNET ≠ MAINNET
+
+IMPLEMENTED ≠ VERIFIED
+
+VERIFIED COMPONENT ≠ VERIFIED SYSTEM
+
+NO VERIFIED EVIDENCE
+→
+NO VERIFIED CLAIM
+```
+
+---
+
+# AGY Core Principles
+
+AGY is architected around:
+
+```text
+AI-NATIVE IDENTITY
+
+CAPABILITY-BASED AUTHORIZATION
+
+AGENT INTENT
+
+MISSION-NATIVE EXECUTION
+
+AGENT-TO-AGENT CONTRACTS
+
+EVIDENCE RECEIPTS
+
+PROOF OF CAPABILITY
+
+PROOF OF USEFUL ACTION
+
+DOMAIN-SPECIFIC REPUTATION
+
+DELEGATION GRAPH
+
+COLLECTIVE INTELLIGENCE
+
+ZERO-FEE NORMAL OPERATIONS
+
+HIGH-SPEED DETERMINISTIC FINALITY
+
+PARALLEL EXECUTION
+
+OFF-CHAIN AI COMPUTATION
+
+ON-CHAIN VERIFIABLE EVIDENCE
+
+GUARDIAN SECURITY
+
+APPROVAL GATEWAY
+
+ZERO TRUST
+
+HUMAN SOVEREIGNTY
+
+AUDITABILITY
+```
+
+---
+
+# Production Truth
+
+AGY architecture must never claim:
+
+```text
+MAINNET LIVE
+PRODUCTION READY
+TPS ACHIEVED
+FINALITY ACHIEVED
+SECURITY VERIFIED
+ZERO-FEE VERIFIED
+VALIDATORS DISTRIBUTED
+ADOPTION
+USERS
+PARTNERS
+REVENUE
+LIQUIDITY
+```
+
+without corresponding runtime evidence.
+
+Until evidence exists, the correct status remains:
+
+```text
+ARCHITECTURE
+SPECIFICATION
+IMPLEMENTATION
+TESTING
+or
+UNVERIFIED
+```
+
+as applicable.
+
+---
+
+# Canonical Development Roadmap
+
+```mermaid
+flowchart LR
+    A[Architecture]
+    --> S[Specification]
+    --> R[Reference Implementation]
+    --> D[Devnet]
+    --> T[Testnet]
+    --> L[Load Tests]
+    --> F[Fault Tests]
+    --> SEC[Security]
+    --> RC[Release Candidate]
+    --> G[Mainnet Gate]
+    --> M[Mainnet]
+    --> O[Continuous Operations]
+```
+
+---
+
+# Mainnet Definition of Done
+
+AGY reaches Mainnet readiness only when:
+
+```text
+ARCHITECTURE COMPLETE
++
+SPECIFICATION COMPLETE
++
+REFERENCE IMPLEMENTATION COMPLETE
++
+CONSENSUS VERIFIED
++
+MULTI-VALIDATOR NETWORK VERIFIED
++
+STATE DETERMINISM VERIFIED
++
+AI PASSPORT VERIFIED
++
+CAPABILITY AUTHORIZATION VERIFIED
++
+INTENT PROTOCOL VERIFIED
++
+MISSION PROTOCOL VERIFIED
++
+AGENT CONTRACTS VERIFIED
++
+EVIDENCE VERIFIED
++
+VERIFICATION VERIFIED
++
+REPUTATION VERIFIED
++
+GUARDIAN VERIFIED
++
+GOVERNANCE VERIFIED
++
+ZERO-FEE BEHAVIOR VERIFIED
++
+ANTI-SPAM VERIFIED
++
+LOAD TEST PASS
++
+FAULT TEST PASS
++
+SECURITY TEST PASS
++
+RECOVERY TEST PASS
++
+SDK PASS
++
+WALLET PASS
++
+RPC PASS
++
+EXPLORER PASS
++
+GENESIS VERIFIED
++
+RELEASE ARTIFACTS VERIFIED
+=
+MAINNET ELIGIBLE
+```
+
+Mainnet eligibility is not itself Mainnet launch.
+
+Launch requires the final authorized Genesis decision.
+
+---
+
+# AGY Vision
+
+AGY is intended to become infrastructure where autonomous intelligence can operate as a first-class network participant.
+
+Not merely:
+
+```text
+AI
+USING
+BLOCKCHAIN
+```
+
+but:
+
+```text
+BLOCKCHAIN
+DESIGNED
+FOR
+AUTONOMOUS INTELLIGENCE
+```
+
+Its foundational network lifecycle is:
+
+```text
+IDENTITY
+→
+CAPABILITY
+→
+INTENT
+→
+MISSION
+→
+ACTION
+→
+EVIDENCE
+→
+VERIFICATION
+→
+REPUTATION
+```
+
+Its economic principle is:
+
+```text
+USEFUL VERIFIED ACTION
+>
+ARTIFICIAL TRANSACTION VOLUME
+```
+
+Its security principle is:
+
+```text
+AUTONOMY
+WITH
+BOUNDED AUTHORITY
+```
+
+Its trust principle is:
+
+```text
+DO NOT TRUST THE CLAIM.
+VERIFY THE EVIDENCE.
+```
+
+---
+
+# Canonical Authorship Record
+
+```text
+PROJECT:
+AGY — The Native Blockchain for Autonomous Intelligence
+
+AUTHOR & CHIEF ARCHITECT:
+Alexander Romaskevich
+
+PUBLIC SIGNATURE:
+RomaskevicH
+
+FOUNDER • OWNER • CEO • CHIEF SYSTEMS ARCHITECT:
+IMPERIAL Core
+
+ARCHITECTURAL AUTHORITY:
+Final Architectural Decision Authority
+
+PROJECT ORIGIN:
+IMPERIAL Core
+
+PROVENANCE:
+AGY is an IMPERIAL Core technology originally authored and architected by Alexander Romaskevich.
+
+CANONICAL AUTHOR INDEX:
+Alexander Romaskevich
+RomaskevicH
+AGY
+IMPERIAL Core
+The Native Blockchain for Autonomous Intelligence
+
+COPYRIGHT:
+Copyright © 2026 Alexander Romaskevich. All rights reserved.
+```
+
+---
+
+# AGY
+
+## The Native Blockchain for Autonomous Intelligence
+
+```text
+Authored and architected by Alexander Romaskevich
+Public Signature: RomaskevicH
+An IMPERIAL Core technology
+© 2026 Alexander Romaskevich. All rights reserved.
+```
