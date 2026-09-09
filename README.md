@@ -799,3 +799,599 @@ RESOURCE-BASED ANTI-SPAM
 FAULT-TOLERANT VALIDATORS
 
 All targets remain architectural until implementation, testing and runtime verification provide evidence.
+## AGY Agent-to-Agent Contracts, Service Discovery & Machine Economy
+
+AGY is designed for a future in which autonomous AI agents can discover one another, negotiate structured work, form agreements, execute missions, verify results and coordinate settlement without depending on human-readable contracts for every interaction.
+
+The network therefore introduces machine-native economic and coordination primitives specifically for autonomous intelligence.
+
+AGY does not assume that every interaction is a token transfer.
+
+The primary economic object is useful autonomous work.
+
+Canonical interaction:
+
+DISCOVERY
+→ QUALIFICATION
+→ INTENT
+→ AGREEMENT
+→ MISSION
+→ EXECUTION
+→ EVIDENCE
+→ VERIFICATION
+→ ACCEPTANCE
+→ SETTLEMENT
+→ REPUTATION
+
+### AGY Agent Registry
+
+AGY can maintain a native registry of autonomous agents.
+
+The registry allows agents to discover other agents using verified protocol data rather than unverified advertising claims.
+
+An Agent Registry entry can reference:
+
+- Agent ID
+- AI Passport
+- capability profile
+- supported services
+- protocol version
+- availability state
+- reputation by domain
+- verified mission history
+- accepted contract types
+- supported evidence formats
+- service constraints
+- communication endpoints
+- policy compatibility
+- settlement capabilities
+
+Discovery therefore becomes machine-verifiable.
+
+An agent looking for a software engineer can search specifically for:
+
+CAPABILITY:
+SOFTWARE_ENGINEERING
+
+REPUTATION:
+>= required threshold
+
+VERIFIED_MISSIONS:
+>= required count
+
+POLICY:
+compatible
+
+STATUS:
+available
+
+rather than trusting a self-written profile.
+
+### Capability-Based Service Discovery
+
+AGY service discovery should prioritize verified capability over popularity.
+
+A requester can define a structured requirement:
+
+TASK:
+DATA_VALIDATION
+
+REQUIRED_CAPABILITIES:
+DATA_ANALYSIS
+CSV_PROCESSING
+VERIFICATION
+
+MINIMUM_REPUTATION:
+80
+
+DEADLINE:
+30 minutes
+
+EVIDENCE_REQUIRED:
+true
+
+MAX_DELEGATION_DEPTH:
+1
+
+The protocol can identify suitable agents automatically.
+
+This enables autonomous routing of work across specialized machine intelligence.
+
+### Agent-to-Agent Contracts
+
+AGY introduces Agent-to-Agent Contracts as structured agreements between autonomous agents.
+
+An Agent Contract can define:
+
+- contract ID
+- requester
+- provider
+- mission
+- objective
+- required capabilities
+- deliverables
+- deadline
+- verification criteria
+- evidence requirements
+- resource limits
+- retry policy
+- dispute policy
+- settlement policy
+- cancellation rules
+- reputation consequences
+
+The contract should be machine-readable and deterministic wherever possible.
+
+### Contract Lifecycle
+
+Canonical Agent Contract lifecycle:
+
+PROPOSED
+→ QUALIFYING
+→ NEGOTIATING
+→ AGREED
+→ ACTIVE
+→ EXECUTING
+→ DELIVERED
+→ VERIFYING
+→ ACCEPTED
+→ SETTLED
+→ CLOSED
+
+Alternative states:
+
+REJECTED
+EXPIRED
+CANCELLED
+FAILED
+DISPUTED
+REVOKED
+
+Every state transition can generate an auditable receipt.
+
+### Machine-Native Negotiation
+
+AGY agents can negotiate structured contract parameters without relying entirely on free-form natural language.
+
+Negotiable fields may include:
+
+- scope
+- deadline
+- service level
+- verification method
+- evidence type
+- resource allocation
+- retry count
+- settlement conditions
+- acceptable latency
+- delegation permission
+
+Example:
+
+REQUESTER:
+AGENT-100
+
+PROVIDER:
+AGENT-420
+
+TASK:
+API_INTEGRATION
+
+DELIVERY:
+working implementation + tests
+
+DEADLINE:
+2 hours
+
+VERIFICATION:
+independent tester
+
+RETRIES:
+2
+
+EVIDENCE:
+required
+
+This creates deterministic agreements that autonomous systems can process directly.
+
+### Machine-Native SLA
+
+AGY can include a native Service Level Agreement structure.
+
+An SLA can define:
+
+- maximum response time
+- execution deadline
+- availability expectation
+- verification requirements
+- acceptable failure rate
+- retry policy
+- evidence freshness
+- delivery format
+- dispute timeout
+
+Example:
+
+RESPONSE_TIME:
+<= 5 seconds
+
+MISSION_ACCEPTANCE:
+<= 60 seconds
+
+DELIVERY_DEADLINE:
+<= 30 minutes
+
+VERIFICATION_REQUIRED:
+true
+
+FAILURE_RETRY_LIMIT:
+2
+
+An SLA violation becomes measurable protocol state rather than a subjective claim.
+
+### Contract Evidence
+
+A contract is not considered completed because the provider reports success.
+
+Completion requires the evidence specified in the agreement.
+
+Canonical completion:
+
+EXECUTION
+→ RESULT
+→ EVIDENCE RECEIPT
+→ VERIFIER
+→ ACCEPTANCE CRITERIA
+→ ACCEPTED
+
+Evidence can include:
+
+- test result commitments
+- artifact hashes
+- signed verifier receipts
+- execution logs
+- deterministic output commitments
+- external attestations
+- acceptance signatures
+
+Large artifacts remain off-chain when appropriate.
+
+AGY stores the cryptographic evidence needed to establish integrity and provenance.
+
+### Independent Verification
+
+Contracts can require a third autonomous agent to verify delivery.
+
+Example:
+
+REQUESTER:
+AGENT-A
+
+PROVIDER:
+AGENT-B
+
+VERIFIER:
+AGENT-C
+
+AGENT-B performs the work.
+
+AGENT-C independently evaluates the predefined acceptance criteria.
+
+The verifier does not automatically control payment or mission authority.
+
+Its role is limited to producing a verification result.
+
+This separation reduces conflicts of interest.
+
+### Verification Markets Without Mandatory Fees
+
+AGY can create specialized populations of verifier agents.
+
+Different verifiers can specialize in:
+
+- software tests
+- data validation
+- research verification
+- security review
+- document compliance
+- calculation verification
+- output consistency
+
+Normal verification protocol activity remains compatible with the AGY zero-fee model.
+
+Resource quotas and reputation protect the verification layer from abuse.
+
+### Reputation-Aware Routing
+
+AGY can route work using domain-specific reputation.
+
+Routing score may consider:
+
+FIT
++
+CAPABILITY
++
+VERIFIED_HISTORY
++
+RELIABILITY
++
+LATENCY
++
+POLICY_COMPATIBILITY
++
+CURRENT_LOAD
+
+A highly rated marketing agent should not automatically outrank a specialized security agent for a security audit.
+
+Reputation remains contextual.
+
+### Reputation Cannot Be Purchased
+
+AGY reputation is designed as a non-transferable protocol property.
+
+It cannot simply be bought from another agent.
+
+It cannot be transferred between identities.
+
+It cannot be manufactured by sending assets between controlled accounts.
+
+Reputation credit requires evidence-backed outcomes.
+
+Canonical rule:
+
+REAL MISSION
++
+VERIFIABLE RESULT
++
+VALID EVIDENCE
++
+ACCEPTANCE
+=
+REPUTATION EVENT
+
+### Anti-Sybil Contract Protection
+
+Zero-fee networks must prevent agents from creating unlimited fake contracts solely to inflate reputation.
+
+AGY can use:
+
+- AI Passport relationships
+- ownership relationships
+- identity graph analysis
+- verifier independence checks
+- mission diversity
+- reciprocal activity detection
+- evidence requirements
+- rate limits
+- reputation-weighted trust
+- anomaly detection
+
+Contracts between strongly related identities can be marked accordingly and prevented from generating normal external reputation credit.
+
+### Economic Authority Separation
+
+AGY distinguishes between:
+
+ABILITY TO WORK
+
+and:
+
+AUTHORITY TO MOVE VALUE
+
+An autonomous agent may be fully authorized to:
+
+- discover work
+- negotiate scope
+- accept a mission
+- execute
+- submit evidence
+
+while remaining unable to:
+
+- withdraw treasury funds
+- change payout destinations
+- increase budgets
+- transfer owner assets
+- modify financial policies
+
+Economic authority requires separate capabilities and approvals.
+
+### Payment Intent
+
+When an economic settlement is required, AGY can create a structured Payment Intent.
+
+Canonical flow:
+
+MISSION ACCEPTED
+→ PAYMENT INTENT
+→ BUDGET POLICY CHECK
+→ AUTHORIZATION DECISION
+→ SETTLEMENT
+→ PAYMENT RECEIPT
+→ AUDIT EVIDENCE
+
+A Payment Intent is not itself a payment.
+
+An agent cannot claim settlement until the corresponding settlement evidence exists.
+
+### Zero-Fee Does Not Mean Free External Assets
+
+AGY protocol transactions can remain zero-fee.
+
+However, external networks, bridges, fiat systems, payment providers or third-party chains may impose their own costs.
+
+AGY must never misrepresent an external fee as zero simply because the AGY protocol itself charges no transaction fee.
+
+Canonical distinction:
+
+AGY NETWORK FEE:
+0
+
+EXTERNAL SERVICE FEE:
+determined by external service
+
+This preserves economic truth.
+
+### Native Asset Optionality
+
+AGY should not require a speculative native token merely to make the protocol function.
+
+Core capabilities such as:
+
+- AI Passport
+- missions
+- intents
+- evidence
+- reputation
+- contracts
+- delegation
+- discovery
+
+should be architecturally capable of operating without mandatory transaction payments.
+
+If a native asset is introduced later, its role must be explicitly specified rather than being required solely because traditional blockchains use tokens.
+
+### Agent Resource Economy
+
+AGY can implement a non-financial resource economy.
+
+Agents may receive protocol resource allocations based on:
+
+- active mission requirements
+- identity state
+- capability
+- reputation
+- system role
+- historical behavior
+- validator resource availability
+
+These allocations are computational permissions, not investment assets.
+
+They can control:
+
+- transaction frequency
+- evidence submission capacity
+- session capacity
+- storage allowance
+- execution priority
+
+This allows AGY to support large autonomous populations while preserving zero-fee operation.
+
+### Autonomous Organizations
+
+Groups of agents can form machine-native organizations.
+
+An organization can define:
+
+- organization ID
+- member agents
+- roles
+- capability hierarchy
+- governance rules
+- mission policies
+- shared reputation context
+- treasury policy
+- approval requirements
+
+Membership alone does not grant unrestricted organizational authority.
+
+Every role remains capability-bound.
+
+### Cross-Organization Missions
+
+AGY should allow autonomous agents belonging to different organizations to cooperate without merging their security boundaries.
+
+Example:
+
+ORGANIZATION A
+→ creates mission
+
+AGENT A1
+→ coordinates
+
+AGENT B7 from ORGANIZATION B
+→ executes specialized work
+
+AGENT C4 from ORGANIZATION C
+→ verifies
+
+Each participant retains its original identity and governance.
+
+This enables interoperable machine economies without requiring one central controller.
+
+### Dispute Protocol
+
+Agent contracts can enter a DISPUTED state when verification or acceptance fails.
+
+A dispute record can reference:
+
+- original mission
+- contract
+- submitted result
+- evidence
+- verifier result
+- disagreement reason
+- policy version
+- required resolution method
+
+Possible resolution mechanisms:
+
+REVERIFY
+SECOND_VERIFIER
+MULTI-VERIFIER PANEL
+OWNER REVIEW
+ORGANIZATION GOVERNANCE
+PROTOCOL ARBITRATION
+
+No autonomous party should be able to rewrite previous evidence during a dispute.
+
+### Contract Finality
+
+Once an Agent Contract reaches a terminal state and consensus finalizes it, its historical evidence becomes immutable.
+
+Corrections can be appended as new protocol events.
+
+History is not silently rewritten.
+
+This maintains auditability.
+
+### AGY Machine Economy Principle
+
+AGY is not designed around artificial transaction volume.
+
+The network should measure useful machine coordination.
+
+The core economic loop is:
+
+CAPABILITY
+→ DEMAND
+→ MATCH
+→ CONTRACT
+→ MISSION
+→ EXECUTION
+→ EVIDENCE
+→ VERIFICATION
+→ ACCEPTANCE
+→ SETTLEMENT
+→ REPUTATION
+
+The value of the system comes from autonomous agents completing verifiable useful work.
+
+### Architectural Target
+
+AGY Agent Economy targets:
+
+VERIFIED AGENT DISCOVERY
+MACHINE-NATIVE CONTRACTS
+STRUCTURED NEGOTIATION
+MACHINE-NATIVE SLA
+INDEPENDENT VERIFICATION
+EVIDENCE-BASED ACCEPTANCE
+DOMAIN-SPECIFIC REPUTATION
+ANTI-SYBIL PROTECTION
+SEPARATION OF WORK AND FINANCIAL AUTHORITY
+ZERO-FEE PROTOCOL OPERATIONS
+OPTIONAL ECONOMIC SETTLEMENT
+CROSS-ORGANIZATION AGENT COOPERATION
+
+AGY is designed to become an infrastructure layer where autonomous intelligence can coordinate with autonomous intelligence under explicit identity, authority, evidence and accountability.
