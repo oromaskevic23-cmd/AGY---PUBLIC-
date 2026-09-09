@@ -3503,3 +3503,1145 @@ AGY Validator and Governance architecture targets:
 - evidence-based validator readiness.
 
 AGY consensus must remain fast enough for autonomous intelligence while governance remains deliberate enough to protect the network from autonomous mistakes, compromised nodes and unsafe protocol changes.
+## AGY Privacy, Attestation, Confidential Agent State & Verifiable Identity Architecture
+
+AGY is designed for autonomous AI agents that may operate with sensitive identities, private missions, proprietary data, confidential business logic, restricted capabilities and protected organizational information.
+
+A public blockchain must therefore distinguish between:
+
+PUBLIC VERIFIABILITY
+and
+UNNECESSARY DATA EXPOSURE
+
+AGY must make critical facts verifiable without requiring every private detail to become public.
+
+Canonical principle:
+
+```text
+VERIFY WHAT MATTERS
+WITHOUT REVEALING WHAT DOES NOT
+```
+
+---
+
+## Privacy Is Not Secrecy From Governance
+
+AGY privacy must not be interpreted as an ability to bypass authorization, policy, audit or lawful governance.
+
+Private execution remains subject to:
+
+- AI Passport rules;
+- capability boundaries;
+- mission authority;
+- Guardian policy;
+- Approval Gateway requirements;
+- Audit Ledger commitments;
+- validator consensus rules.
+
+Privacy protects unnecessary disclosure.
+
+It does not create hidden unrestricted authority.
+
+---
+
+## Public and Private Agent State
+
+AGY can explicitly classify agent information.
+
+Example:
+
+```text
+PUBLIC
+PRIVATE
+SECRET
+RESTRICTED
+```
+
+### PUBLIC
+
+Suitable for public consensus state:
+
+- Agent ID;
+- public signing keys;
+- protocol version;
+- public capabilities;
+- public reputation commitments;
+- validator status;
+- public service profile.
+
+### PRIVATE
+
+Accessible only to authorized participants:
+
+- private mission details;
+- internal workflow metadata;
+- customer information;
+- private contract parameters;
+- non-public evidence.
+
+### SECRET
+
+Highly protected material:
+
+- authentication secrets;
+- private API credentials;
+- recovery secrets;
+- encryption keys;
+- private wallet material.
+
+### RESTRICTED
+
+Highly sensitive operations requiring explicit policy:
+
+- treasury authorization;
+- root governance controls;
+- validator key management;
+- emergency security controls;
+- owner-level capabilities.
+
+Secret material should never be stored directly on the public blockchain.
+
+---
+
+## AGY Selective Disclosure
+
+An agent should be able to prove a statement without exposing its complete underlying record.
+
+Example:
+
+```text
+AGENT CLAIM:
+I possess the required SOFTWARE_AUDIT capability.
+
+PUBLICLY REVEALED:
+Capability valid = true
+Capability scope = mission-compatible
+Expiration valid = true
+
+NOT PUBLICLY REVEALED:
+Complete capability history
+Other unrelated capabilities
+Private organizational metadata
+Internal policy details
+```
+
+This enables machine-native selective disclosure.
+
+---
+
+## Verifiable Credential Model
+
+AGY AI Passport can support signed verifiable credentials.
+
+A credential can contain:
+
+```text
+credential_id
+issuer
+subject_agent
+credential_type
+capability
+scope
+issued_at
+expires_at
+revocation_reference
+commitment
+issuer_signature
+```
+
+Credential lifecycle:
+
+```mermaid
+stateDiagram-v2
+    [*] --> ISSUED
+    ISSUED --> ACTIVE
+    ACTIVE --> EXPIRED
+    ACTIVE --> REVOKED
+    ACTIVE --> UPDATED
+    UPDATED --> ACTIVE
+    EXPIRED --> [*]
+    REVOKED --> [*]
+```
+
+A credential does not automatically grant execution authority.
+
+Guardian still evaluates current policy and mission context.
+
+---
+
+## Proof Instead of Raw Data
+
+AGY should prefer cryptographic proof over unnecessary disclosure.
+
+Conceptually:
+
+```mermaid
+flowchart LR
+    D[Private Agent Data]
+    --> C[Cryptographic Commitment]
+    --> P[Proof]
+    --> V[Verifier]
+    --> R[Verified Statement]
+
+    D -. remains private .-> D
+```
+
+The verifier learns the required fact.
+
+The verifier does not automatically receive the entire private dataset.
+
+---
+
+## Zero-Knowledge Capability Proofs
+
+Future AGY versions can support zero-knowledge proofs for selected protocol claims.
+
+Possible proofs:
+
+```text
+I possess capability X
+WITHOUT revealing all capabilities.
+
+My reputation exceeds threshold Y
+WITHOUT revealing complete reputation history.
+
+My credential is valid
+WITHOUT revealing unrelated credential fields.
+
+My mission budget is within authorized limit
+WITHOUT revealing the complete budget.
+
+I belong to an approved organization
+WITHOUT exposing private membership metadata.
+```
+
+Zero-knowledge mechanisms must be added only after implementation and cryptographic review.
+
+Their presence in architecture is not a claim of current implementation.
+
+---
+
+## Proof of Capability With Privacy
+
+AGY Proof of Capability can evolve into:
+
+```mermaid
+flowchart TD
+    A[Agent]
+    --> P[AI Passport]
+    P --> C[Private Capability Credential]
+    C --> Z[Capability Proof]
+    Z --> G[Guardian]
+    G --> D{Authorized?}
+
+    D -->|YES| X[Mission Execution]
+    D -->|NO| N[Deny]
+```
+
+Guardian validates the required fact while minimizing disclosure.
+
+---
+
+## Private Mission Architecture
+
+Not every mission should reveal its full objective publicly.
+
+A private mission can place only the minimum required commitments on-chain.
+
+Example public representation:
+
+```text
+MISSION_ID:
+AGY-MISSION-9871
+
+REQUESTER:
+verified
+
+EXECUTOR:
+verified
+
+MISSION_HASH:
+0x...
+
+POLICY_ROOT:
+0x...
+
+REQUIRED_CAPABILITIES_ROOT:
+0x...
+
+STATUS:
+EXECUTING
+
+DEADLINE:
+committed
+
+FULL MISSION CONTENT:
+PRIVATE
+```
+
+Authorized participants receive the complete mission off-chain through encrypted channels.
+
+---
+
+## Mission Confidentiality Diagram
+
+```mermaid
+flowchart TD
+    R[Requester]
+    --> M[Private Mission Specification]
+
+    M --> E[Encrypt]
+    E --> A[Authorized Agent]
+
+    M --> H[Hash / Commitment]
+    H --> B[AGY Blockchain]
+
+    A --> X[Execute]
+    X --> EV[Private Evidence]
+    EV --> C[Evidence Commitment]
+    C --> B
+
+    B --> V[Public Verification of Integrity]
+```
+
+The blockchain proves that the committed mission and evidence have not been altered.
+
+It does not need to expose their contents.
+
+---
+
+## Encrypted Agent-to-Agent Communication
+
+AGY can define a secure messaging layer for protocol participants.
+
+Properties may include:
+
+- authenticated sender;
+- authenticated receiver;
+- end-to-end encryption;
+- replay protection;
+- message expiration;
+- mission binding;
+- integrity verification;
+- optional delivery receipt.
+
+Message object:
+
+```text
+message_id
+sender_agent
+receiver_agent
+mission_id
+ciphertext
+nonce
+timestamp
+expires_at
+signature
+```
+
+Validators do not need access to plaintext message content.
+
+---
+
+## Session Keys
+
+Long-lived identity keys should not encrypt every operational message.
+
+AGY can use short-lived session keys.
+
+Canonical flow:
+
+```mermaid
+sequenceDiagram
+    participant A as Agent A
+    participant B as Agent B
+    participant G as AGY Identity Layer
+
+    A->>G: Verify Agent B Identity
+    B->>G: Verify Agent A Identity
+    A->>B: Establish Ephemeral Session
+    B-->>A: Session Confirmation
+    A->>B: Encrypted Mission Messages
+    B->>A: Encrypted Results
+```
+
+Session keys can expire automatically when:
+
+- mission closes;
+- session expires;
+- capability is revoked;
+- Guardian suspends the agent;
+- either participant terminates the session.
+
+---
+
+## Key Hierarchy
+
+AGY should separate cryptographic purposes.
+
+Example hierarchy:
+
+```text
+AGY ROOT IDENTITY KEY
+│
+├── IDENTITY SIGNING KEY
+├── SESSION AUTHENTICATION KEY
+├── MESSAGE ENCRYPTION KEY
+├── EVIDENCE SIGNING KEY
+├── DELEGATION KEY
+└── RECOVERY KEY
+```
+
+A compromise of one operational key should not automatically compromise every function.
+
+---
+
+## Key Rotation
+
+All operational keys must support rotation.
+
+Canonical process:
+
+```text
+ROTATION INTENT
+→
+IDENTITY VERIFICATION
+→
+POLICY CHECK
+→
+NEW KEY PROOF
+→
+ACTIVATION
+→
+OLD KEY REVOCATION
+→
+AUDIT RECEIPT
+```
+
+Key history remains auditable.
+
+---
+
+## Agent Recovery
+
+Autonomous agents require recovery mechanisms for lost or compromised credentials.
+
+Recovery can use:
+
+- owner recovery authority;
+- organizational multisignature;
+- hardware-backed recovery;
+- threshold recovery;
+- governance-approved recovery for system agents.
+
+Recovery must never allow silent identity takeover.
+
+---
+
+## Threshold Recovery
+
+Critical identities can use threshold authorization.
+
+Example:
+
+```text
+RECOVERY POLICY:
+3_OF_5
+
+AUTHORIZED RECOVERY PARTIES:
+OWNER
+SECURITY AUTHORITY A
+SECURITY AUTHORITY B
+ORGANIZATION ADMIN
+RECOVERY TRUSTEE
+```
+
+No single recovery participant can independently seize the identity.
+
+---
+
+## Runtime Attestation
+
+An AGY agent may claim to execute under a particular runtime, model class or security configuration.
+
+AGY can support runtime attestations.
+
+Possible attestation fields:
+
+```text
+agent_id
+runtime_id
+software_version
+model_class
+policy_version
+tool_profile
+execution_environment
+timestamp
+attestor
+measurement
+signature
+```
+
+Attestation answers:
+
+> What environment produced this action?
+
+It does not expose private reasoning.
+
+---
+
+## No Chain-of-Thought Storage
+
+AGY must not require private chain-of-thought or hidden model reasoning to be written on-chain.
+
+Verification should rely on:
+
+- inputs where permitted;
+- outputs;
+- execution receipts;
+- tool traces;
+- deterministic tests;
+- signatures;
+- commitments;
+- verifier results;
+- policy state.
+
+Canonical rule:
+
+```text
+VERIFY ACTIONS AND RESULTS
+NOT PRIVATE INTERNAL REASONING
+```
+
+This protects privacy and reduces unnecessary data retention.
+
+---
+
+## Tool Attestation
+
+Agent actions can reference the tools used during execution.
+
+Example:
+
+```text
+AGENT:
+AGENT-551
+
+MISSION:
+AGY-MISSION-290
+
+TOOL:
+PLAYWRIGHT
+
+TOOL_VERSION:
+1.63.0
+
+ACTION:
+UI_TEST
+
+RESULT:
+PASS
+
+EVIDENCE_ROOT:
+0x...
+```
+
+Tool attestation strengthens provenance without granting the tool independent authority.
+
+---
+
+## Model Independence
+
+AGY must not depend permanently on one AI provider or model family.
+
+AI Passport can reference a model profile, but protocol identity must remain independent.
+
+```mermaid
+flowchart TD
+    ID[AGY Agent Identity]
+
+    ID --> M1[Model A]
+    ID --> M2[Model B]
+    ID --> M3[Local Model]
+    ID --> M4[Future Model]
+
+    ID --> P[Persistent Agent Passport]
+```
+
+An agent may upgrade or replace its reasoning model while preserving identity, subject to policy and attestation rules.
+
+---
+
+## Model Change Event
+
+A significant runtime or model change can generate:
+
+```text
+MODEL_CHANGE_INTENT
+→
+NEW_RUNTIME_ATTESTATION
+→
+CAPABILITY REASSESSMENT
+→
+POLICY CHECK
+→
+ACTIVATION
+→
+AUDIT RECEIPT
+```
+
+High-risk capabilities can require re-verification after a major model change.
+
+---
+
+## Confidential Reputation
+
+Some reputation data may need selective disclosure.
+
+An organization may not want to reveal every customer interaction publicly.
+
+AGY can publish commitments such as:
+
+```text
+SOFTWARE_ENGINEERING_REPUTATION:
+>= 90
+
+VERIFIED_MISSIONS:
+>= 100
+
+CRITICAL_FAILURE_RATE:
+< threshold
+```
+
+without necessarily exposing every underlying mission.
+
+Underlying evidence remains available to authorized auditors when policy requires.
+
+---
+
+## Reputation Proof
+
+```mermaid
+flowchart LR
+    H[Private Mission History]
+    --> R[Reputation Calculation]
+    --> C[Reputation Commitment]
+    --> P[Threshold Proof]
+    --> Q[Qualified Agent]
+
+    H -. not publicly exposed .-> H
+```
+
+---
+
+## Confidential Agent Contracts
+
+Agent-to-Agent Contracts can contain public and private sections.
+
+### Public
+
+```text
+contract_id
+participants
+contract_state
+evidence_commitment
+verification_status
+settlement_status
+```
+
+### Private
+
+```text
+detailed scope
+proprietary data
+customer data
+private pricing
+internal instructions
+restricted evidence
+```
+
+This creates accountability without forcing commercial confidentiality onto a public ledger.
+
+---
+
+## Private Evidence Vault
+
+AGY architecture can include an encrypted Evidence Vault outside consensus storage.
+
+Concept:
+
+```mermaid
+flowchart TD
+    A[Agent]
+    --> E[Evidence Artifact]
+    E --> ENC[Encrypt]
+    ENC --> V[Private Evidence Vault]
+
+    E --> H[Hash]
+    H --> C[AGY Chain Commitment]
+
+    AUD[Authorized Auditor]
+    --> V
+    V --> AUD
+
+    AUD --> C
+    C --> AUD
+```
+
+The vault stores encrypted artifacts.
+
+AGY stores immutable proof of integrity.
+
+---
+
+## Access Grants
+
+Private evidence can use explicit access grants.
+
+Example:
+
+```text
+RESOURCE:
+EVIDENCE-771
+
+GRANTEE:
+AGENT-VERIFY-22
+
+PERMISSION:
+READ
+
+MISSION:
+AGY-MISSION-500
+
+EXPIRES:
+30 minutes
+
+DOWNLOAD_LIMIT:
+1
+
+REDELEGATION:
+DENIED
+```
+
+Access grants themselves can be audited.
+
+---
+
+## Data Minimization
+
+AGY should follow a data-minimization principle.
+
+Store on-chain only what consensus requires.
+
+Avoid storing:
+
+- raw credentials;
+- passwords;
+- API keys;
+- private customer records;
+- unnecessary personal information;
+- complete private documents;
+- private model reasoning;
+- large binary artifacts.
+
+Prefer:
+
+```text
+HASH
+COMMITMENT
+PROOF
+ATTESTATION
+RECEIPT
+```
+
+---
+
+## Immutable Ledger vs Data Deletion
+
+Blockchain immutability creates special privacy challenges.
+
+AGY should therefore avoid putting deletable private content directly on-chain.
+
+Architecture:
+
+```text
+PRIVATE DATA
+→ encrypted off-chain storage
+
+BLOCKCHAIN
+→ immutable cryptographic commitment
+```
+
+If off-chain data must later be removed according to applicable policy, the blockchain commitment can remain without retaining the original private content.
+
+---
+
+## Metadata Privacy
+
+Even encrypted content can reveal metadata.
+
+AGY should minimize unnecessary exposure of:
+
+- communication frequency;
+- organizational structure;
+- private mission relationships;
+- exact resource usage;
+- sensitive timing patterns.
+
+Future privacy layers can include:
+
+- batched commitments;
+- delayed disclosure;
+- aggregated proofs;
+- privacy-preserving routing;
+- pseudonymous mission identifiers where appropriate.
+
+These require dedicated security analysis before implementation.
+
+---
+
+## Public Identity vs Operating Identity
+
+AGY can support different identity presentation layers.
+
+Example:
+
+```text
+ROOT AGENT IDENTITY:
+persistent and cryptographic
+
+PUBLIC OPERATING PROFILE:
+selectively disclosed
+
+MISSION IDENTITY:
+mission-scoped
+
+SESSION IDENTITY:
+temporary
+```
+
+All layers must remain cryptographically attributable under authorized audit conditions.
+
+Pseudonymity must not become untraceable privilege escalation.
+
+---
+
+## Organizational Privacy Boundaries
+
+Organizations can maintain internal AGY agent graphs.
+
+Example:
+
+```mermaid
+graph TD
+    O[Organization]
+
+    O --> A1[Agent A]
+    O --> A2[Agent B]
+    O --> A3[Agent C]
+
+    A1 --> P1[Private Missions]
+    A2 --> P2[Private Data]
+    A3 --> P3[Private Tools]
+
+    O --> C[Public Organization Commitment]
+    C --> AGY[AGY Blockchain]
+```
+
+The public network can verify organization membership commitments without exposing all internal workflows.
+
+---
+
+## Cross-Organization Proofs
+
+Two organizations can cooperate while revealing only necessary facts.
+
+Example:
+
+```text
+Organization A needs:
+SECURITY_AUDIT capability.
+
+Organization B proves:
+Agent B-17 possesses valid capability
+and reputation above required threshold.
+
+Organization A does NOT require:
+B-17's complete internal employment,
+mission or customer history.
+```
+
+This enables privacy-preserving machine commerce.
+
+---
+
+## Attestation Trust Levels
+
+AGY can classify attestations:
+
+```text
+SELF_ATTESTED
+ORGANIZATION_ATTESTED
+INDEPENDENTLY_VERIFIED
+HARDWARE_ATTESTED
+MULTI_VERIFIER_ATTESTED
+```
+
+Higher assurance missions can require stronger classes.
+
+A self-attestation should never be represented as independent verification.
+
+---
+
+## Hardware Attestation
+
+Future high-security AGY nodes may optionally support trusted hardware attestation.
+
+Possible uses:
+
+- validator key protection;
+- secure agent execution;
+- confidential compute;
+- high-risk verification;
+- protected signing.
+
+Hardware attestation must remain optional at the protocol architecture level unless a future governance decision makes it mandatory for a specific role.
+
+---
+
+## Confidential Compute
+
+AGY can eventually integrate confidential-computing environments.
+
+Concept:
+
+```mermaid
+flowchart LR
+    D[Private Input]
+    --> C[Confidential Execution Environment]
+    C --> A[AI Agent]
+    A --> R[Private Result]
+    C --> T[Runtime Attestation]
+    T --> AGY[AGY Evidence Layer]
+```
+
+Validators verify the attestation and resulting commitments without receiving all private inputs.
+
+---
+
+## Privacy-Preserving Verification
+
+A verifier may sometimes need to prove compliance rather than expose raw data.
+
+Example:
+
+```text
+PRIVATE DATASET
++
+PRIVATE EXECUTION
++
+VERIFICATION CIRCUIT
+=
+PUBLIC PASS/FAIL PROOF
+```
+
+Potential future applications:
+
+- compliance thresholds;
+- capability verification;
+- resource-limit compliance;
+- confidential SLA verification;
+- reputation thresholds.
+
+Cryptographic systems must be independently audited before production use.
+
+---
+
+## Guardian Privacy Boundary
+
+Guardian must receive enough information to make authorization decisions.
+
+Guardian should not automatically receive unrelated private information.
+
+```mermaid
+flowchart TD
+    P[Private Context]
+    --> F[Required Policy Facts]
+    F --> G[Guardian]
+
+    G --> D{Decision}
+
+    D --> A[ALLOW]
+    D --> N[DENY]
+    D --> R[REQUIRE APPROVAL]
+
+    P -. unnecessary fields hidden .-> P
+```
+
+---
+
+## Privacy-Aware Audit
+
+Audit does not require universal public disclosure.
+
+AGY can separate:
+
+```text
+PUBLIC AUDIT PROOF
+AUTHORIZED AUDIT DETAIL
+PRIVATE SOURCE EVIDENCE
+```
+
+A public observer may verify that an authorized audit occurred.
+
+An authorized auditor can inspect the underlying evidence when permitted.
+
+---
+
+## Privacy Failure Modes
+
+AGY security testing must explicitly cover:
+
+- accidental plaintext disclosure;
+- metadata leakage;
+- unauthorized evidence access;
+- stale access grants;
+- revoked credential reuse;
+- session key reuse;
+- cross-mission data leakage;
+- incorrect selective disclosure;
+- malformed proof acceptance;
+- verifier overreach;
+- recovery-key abuse.
+
+Privacy is not considered VERIFIED merely because encryption libraries are present.
+
+---
+
+## Privacy Definition of Done
+
+A privacy subsystem should eventually require evidence for:
+
+```text
+ENCRYPTION
++
+KEY ROTATION
++
+ACCESS CONTROL
++
+REVOCATION
++
+SELECTIVE DISCLOSURE
++
+REPLAY PROTECTION
++
+MISSION ISOLATION
++
+AUDITABILITY
++
+FAILURE TESTING
++
+RECOVERY TESTING
+=
+PRIVACY VERIFIED PASS
+```
+
+---
+
+## Canonical AGY Privacy Architecture
+
+```mermaid
+flowchart TB
+    A[Autonomous AI Agent]
+    --> ID[AGY AI Passport]
+
+    ID --> VC[Verifiable Credentials]
+    VC --> P[Selective Proof]
+
+    P --> G[Guardian]
+    G --> M[Authorized Mission]
+
+    M --> SEC[Encrypted Agent Session]
+    SEC --> EX[Private Execution]
+
+    EX --> EV[Private Evidence]
+    EV --> HASH[Evidence Commitment]
+    HASH --> CHAIN[AGY Blockchain]
+
+    EV --> VAULT[Encrypted Evidence Vault]
+
+    CHAIN --> VER[Verifier]
+    VAULT -->|Authorized Access| VER
+
+    VER --> REC[Verification Receipt]
+    REC --> CHAIN
+
+    CHAIN --> AUD[Audit Proof]
+```
+
+---
+
+## AGY Privacy Constitution
+
+```text
+PUBLIC VERIFIABILITY
+≠
+PUBLIC DISCLOSURE OF EVERYTHING
+
+IDENTITY
+≠
+UNLIMITED PERSONAL DATA
+
+PRIVACY
+≠
+AUTHORITY BYPASS
+
+ENCRYPTION
+≠
+VERIFICATION
+
+SELF-ATTESTATION
+≠
+INDEPENDENT VERIFICATION
+
+PRIVATE REASONING
+IS NOT REQUIRED
+FOR PUBLIC ACCOUNTABILITY
+
+STORE MINIMUM DATA
+PROVE MAXIMUM INTEGRITY
+```
+
+---
+
+## Architectural Target
+
+AGY Privacy and Attestation architecture targets:
+
+- selective disclosure;
+- verifiable credentials;
+- private capability proofs;
+- future zero-knowledge proofs;
+- confidential missions;
+- encrypted agent communication;
+- ephemeral session keys;
+- hierarchical key separation;
+- threshold recovery;
+- runtime and tool attestation;
+- model-independent agent identity;
+- confidential reputation;
+- private Agent Contracts;
+- encrypted Evidence Vaults;
+- scoped evidence access;
+- strict data minimization;
+- metadata privacy;
+- organizational privacy boundaries;
+- cross-organization proofs;
+- attestation assurance levels;
+- optional confidential computing;
+- privacy-preserving verification;
+- privacy-aware Guardian decisions;
+- authorized auditing;
+- explicit privacy failure testing.
+
+AGY should make autonomous intelligence accountable without forcing autonomous intelligence to expose everything it knows, everything it does, or every private relationship it operates within.
