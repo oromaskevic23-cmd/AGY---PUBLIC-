@@ -5907,3 +5907,1479 @@ AGY is an IMPERIAL Core technology authored and architected by Alexander Romaske
 COPYRIGHT:
 Copyright © 2026 Alexander Romaskevich. All rights reserved.
 ```
+# AGY Interoperability, Cross-Chain, External Systems & IMPERIUM Boundary Architecture
+
+Author & Chief Architect: Alexander Romaskevich  
+Public Signature: RomaskevicH  
+Founder • Owner • CEO • Chief Systems Architect of IMPERIAL Core  
+Technology: AGY — The Native Blockchain for Autonomous Intelligence  
+Provenance: An IMPERIAL Core technology authored and architected by Alexander Romaskevich  
+Copyright © 2026 Alexander Romaskevich. All rights reserved.
+
+---
+
+## Canonical Authorship Index
+
+```text
+PROJECT:
+AGY
+
+CANONICAL_TITLE:
+AGY — The Native Blockchain for Autonomous Intelligence
+
+AUTHOR:
+Alexander Romaskevich
+
+PUBLIC_SIGNATURE:
+RomaskevicH
+
+AUTHOR_ROLE:
+Founder • Owner • CEO • Chief Systems Architect of IMPERIAL Core
+
+ARCHITECTURAL_AUTHORITY:
+Final Architectural Decision Authority
+
+ORIGIN:
+IMPERIAL Core
+
+PROJECT_CLASS:
+AI-NATIVE BLOCKCHAIN
+
+ARCHITECTURE_DOMAIN:
+INTEROPERABILITY / CROSS-CHAIN / EXTERNAL SYSTEMS
+
+PROVENANCE:
+AGY is an IMPERIAL Core technology authored and architected by Alexander Romaskevich.
+
+COPYRIGHT:
+Copyright © 2026 Alexander Romaskevich. All rights reserved.
+```
+
+This provenance record should remain present in canonical AGY architecture, specification and generated protocol documentation.
+
+---
+
+## Interoperability Objective
+
+AGY is designed as an AI-native blockchain, but autonomous intelligence cannot operate inside an isolated network.
+
+Agents will need controlled interaction with:
+
+- external blockchains;
+- payment networks;
+- data providers;
+- storage systems;
+- cloud infrastructure;
+- software repositories;
+- web services;
+- organizational systems;
+- decentralized protocols;
+- future machine networks.
+
+AGY therefore requires a native interoperability architecture.
+
+The fundamental rule is:
+
+```text
+INTEROPERABILITY
+≠
+UNRESTRICTED TRUST
+```
+
+Every external interaction must preserve AGY identity, capability, authorization, evidence and audit boundaries.
+
+---
+
+## Canonical External Action Flow
+
+```mermaid
+flowchart LR
+    A[AGY Agent]
+    --> I[Intent]
+    --> C[Capability Check]
+    --> M[Mission Check]
+    --> G[Guardian]
+    --> P[External Connector]
+    --> X[External System]
+    --> R[External Result]
+    --> E[Evidence Receipt]
+    --> V[Verification]
+    --> L[AGY Audit Ledger]
+```
+
+An external system does not become trusted merely because an AGY agent can reach it.
+
+---
+
+## External Connector Architecture
+
+AGY can use bounded connectors for interaction with outside systems.
+
+Connector types may include:
+
+```text
+BLOCKCHAIN_CONNECTOR
+PAYMENT_CONNECTOR
+WEB_API_CONNECTOR
+STORAGE_CONNECTOR
+DATA_CONNECTOR
+REPOSITORY_CONNECTOR
+IDENTITY_CONNECTOR
+ORACLE_CONNECTOR
+COMPUTE_CONNECTOR
+MESSAGE_CONNECTOR
+```
+
+Each connector should expose an explicit capability surface.
+
+Example:
+
+```text
+CONNECTOR:
+GITHUB
+
+ALLOWED:
+READ_REPOSITORY
+CREATE_BRANCH
+CREATE_PULL_REQUEST
+
+DENIED:
+DELETE_REPOSITORY
+CHANGE_OWNER
+ROTATE_ORGANIZATION_SECRETS
+```
+
+Tool availability must never imply unrestricted authority.
+
+---
+
+## Connector Identity
+
+Every production connector can have its own AGY identity record.
+
+```text
+connector_id
+connector_type
+provider
+version
+supported_capabilities
+security_profile
+endpoint_commitment
+operator
+activation_state
+policy_version
+```
+
+This allows an Evidence Receipt to identify not only which agent acted, but which external integration performed the action.
+
+---
+
+## Capability-Scoped External Access
+
+External permissions should be narrower than agent identity.
+
+Canonical model:
+
+```mermaid
+flowchart TD
+    A[Agent Identity]
+    --> C[AGY Capability]
+    C --> M[Mission Scope]
+    M --> P[Connector Policy]
+    P --> T[External Permission]
+    T --> X[External Action]
+```
+
+Example:
+
+```text
+AGENT:
+AGY-AGENT-102
+
+MISSION:
+AGY-MISSION-710
+
+CAPABILITY:
+READ_PUBLIC_REPOSITORY
+
+CONNECTOR:
+GITHUB
+
+RESOURCE:
+repository/example
+
+WRITE:
+DENIED
+
+EXPIRES:
+mission close
+```
+
+---
+
+## External Credentials
+
+AGY must never place plaintext external credentials on-chain.
+
+Forbidden:
+
+```text
+API KEY
+PASSWORD
+PRIVATE TOKEN
+SESSION SECRET
+PRIVATE KEY
+RECOVERY SECRET
+```
+
+Preferred pattern:
+
+```text
+AGY Capability
+→ Secret Reference
+→ Secure Credential Store
+→ Connector
+→ External Service
+```
+
+Architecture:
+
+```mermaid
+flowchart LR
+    A[Agent]
+    --> G[Guardian]
+    --> C[Connector]
+
+    C --> S[Secure Secret Store]
+    S --> C
+
+    C --> X[External System]
+
+    C --> E[Evidence Receipt]
+    E --> AGY[AGY Blockchain]
+```
+
+The agent should receive only the minimum secret exposure necessary for execution.
+
+---
+
+## Credential Rotation
+
+External credentials require explicit lifecycle management:
+
+```text
+CREATE
+→ ACTIVATE
+→ USE
+→ ROTATE
+→ REVOKE
+→ DESTROY
+```
+
+A credential change is a meaningful state change and may require runtime re-verification.
+
+---
+
+## Cross-Chain Architecture
+
+AGY should support interaction with external blockchains without allowing external consensus to silently dictate AGY authority.
+
+Canonical separation:
+
+```text
+AGY CONSENSUS
+≠
+EXTERNAL CONSENSUS
+```
+
+Cross-chain communication can use specialized adapters.
+
+```mermaid
+flowchart LR
+    AGY[AGY Network]
+    --> B[Bridge / Adapter Layer]
+    --> E[External Blockchain]
+
+    E --> P[External Proof]
+    P --> B
+    B --> V[AGY Verification]
+    V --> AGY
+```
+
+---
+
+## Cross-Chain Message
+
+A canonical cross-chain message can contain:
+
+```text
+message_id
+source_chain
+source_height
+source_transaction
+source_event
+destination_chain
+destination_module
+payload_hash
+required_confirmations
+verification_method
+expiration
+nonce
+```
+
+Every message must be protected against:
+
+- replay;
+- duplication;
+- reordering where unsafe;
+- stale state;
+- invalid source proofs;
+- chain reorganization;
+- forged bridge attestations.
+
+---
+
+## External Finality Awareness
+
+Different networks have different finality models.
+
+AGY must not treat all external confirmations equally.
+
+Example classification:
+
+```text
+DETERMINISTIC_FINALITY
+PROBABILISTIC_FINALITY
+APPLICATION_CONFIRMED
+UNVERIFIED
+```
+
+An adapter should define the required external confirmation rule.
+
+Example:
+
+```text
+SOURCE:
+External Chain X
+
+FINALITY_POLICY:
+12 confirmations
+
+STATUS:
+PENDING
+
+AGY ACTION:
+DO NOT SETTLE YET
+```
+
+---
+
+## Cross-Chain State Machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> CREATED
+    CREATED --> SUBMITTED
+    SUBMITTED --> SOURCE_PENDING
+    SOURCE_PENDING --> SOURCE_CONFIRMED
+    SOURCE_PENDING --> FAILED
+    SOURCE_CONFIRMED --> VERIFYING
+    VERIFYING --> VERIFIED
+    VERIFYING --> REJECTED
+    VERIFIED --> AGY_ACCEPTED
+    AGY_ACCEPTED --> FINALIZED
+    REJECTED --> FINALIZED
+    FAILED --> FINALIZED
+```
+
+No external event becomes canonical AGY state before its verification policy passes.
+
+---
+
+## Bridge Security Principle
+
+Bridges are high-risk infrastructure.
+
+Canonical rule:
+
+```text
+BRIDGE CONNECTIVITY
+≠
+BRIDGE AUTHORITY
+```
+
+A bridge may transport verified messages.
+
+It must not automatically receive:
+
+- treasury ownership;
+- root governance authority;
+- unrestricted mint authority;
+- arbitrary capability issuance;
+- Guardian bypass.
+
+---
+
+## Bridge Authorization Layers
+
+```mermaid
+flowchart TD
+    E[External Event]
+    --> B[Bridge Adapter]
+    --> P[Proof Validation]
+    --> R[Replay Protection]
+    --> G[Guardian]
+    --> A{Authorized?}
+
+    A -->|YES| X[Apply AGY State Transition]
+    A -->|NO| D[Deny + Audit]
+```
+
+---
+
+## Bridge Quarantine
+
+Suspicious bridges can enter restricted states:
+
+```text
+ACTIVE
+DEGRADED
+QUARANTINED
+SUSPENDED
+DISABLED
+RECOVERING
+```
+
+Quarantine can stop new high-risk messages while preserving historical evidence.
+
+---
+
+## Bridge Failure Testing
+
+AGY must test:
+
+```text
+INVALID PROOF
+DOUBLE MESSAGE
+REPLAY
+DELAYED MESSAGE
+OUT-OF-ORDER MESSAGE
+SOURCE REORG
+COMPROMISED RELAYER
+INVALID SIGNATURE
+BRIDGE NODE FAILURE
+NETWORK PARTITION
+MALFORMED PAYLOAD
+```
+
+Bridge security is not VERIFIED simply because two networks can exchange a message.
+
+---
+
+## Oracle Architecture
+
+AGY missions may require external facts.
+
+Examples:
+
+- exchange rate;
+- time;
+- weather;
+- public market data;
+- external service state;
+- delivery status;
+- blockchain state;
+- software release information.
+
+AGY can use an Oracle Layer.
+
+```mermaid
+flowchart TD
+    S1[Source A]
+    S2[Source B]
+    S3[Source C]
+
+    S1 --> O[AGY Oracle Aggregator]
+    S2 --> O
+    S3 --> O
+
+    O --> V[Verification Policy]
+    V --> R[Oracle Receipt]
+    R --> AGY[AGY State]
+```
+
+---
+
+## Oracle Truth Classification
+
+Oracle data should include provenance.
+
+Example:
+
+```text
+SOURCE:
+...
+
+OBSERVED_AT:
+...
+
+FETCHED_AT:
+...
+
+SIGNATURE:
+...
+
+CORROBORATION:
+2_OF_3
+
+STATUS:
+VERIFIED
+```
+
+An AI-generated answer alone must not automatically become an oracle truth source.
+
+---
+
+## Multi-Source Verification
+
+High-risk external facts can require multiple independent sources.
+
+```text
+SOURCE A
++
+SOURCE B
++
+SOURCE C
+→
+CONSISTENCY CHECK
+→
+VERIFIED EXTERNAL FACT
+```
+
+Disagreement results in:
+
+```text
+INCONCLUSIVE
+```
+
+rather than fabricated certainty.
+
+---
+
+## Oracle Freshness
+
+External data can expire.
+
+An Oracle Receipt can include:
+
+```text
+valid_from
+valid_until
+maximum_age
+source_timestamp
+```
+
+An old verified fact is not necessarily a current verified fact.
+
+---
+
+## External Storage
+
+AGY can interact with external storage for:
+
+- evidence artifacts;
+- model artifacts;
+- documents;
+- logs;
+- mission packages;
+- large binary files.
+
+Canonical pattern:
+
+```mermaid
+flowchart LR
+    A[Artifact]
+    --> H[Hash]
+    --> S[External Storage]
+
+    H --> AGY[AGY Evidence Commitment]
+
+    S --> V[Verifier]
+    AGY --> V
+
+    V --> R[Integrity PASS / FAIL]
+```
+
+AGY verifies content integrity through commitments.
+
+---
+
+## Storage Independence
+
+AGY should avoid permanent dependence on a single storage provider.
+
+Artifact references can support multiple locations:
+
+```text
+PRIMARY_LOCATION
+MIRROR_LOCATION
+CONTENT_HASH
+MERKLE_ROOT
+```
+
+The content commitment remains stable even if its storage location changes.
+
+---
+
+## External Compute
+
+AI inference and large workloads should normally execute outside blockchain consensus.
+
+AGY can route authorized work to:
+
+```text
+LOCAL_RUNTIME
+CLOUD_RUNTIME
+EDGE_RUNTIME
+GPU_RUNTIME
+CPU_RUNTIME
+CONFIDENTIAL_RUNTIME
+```
+
+External compute must return evidence.
+
+```mermaid
+sequenceDiagram
+    participant A as AGY Agent
+    participant G as Guardian
+    participant C as Compute Connector
+    participant X as External Runtime
+    participant E as Evidence Layer
+
+    A->>G: Execution Intent
+    G->>C: Authorized
+    C->>X: Execute Workload
+    X-->>C: Result + Runtime Metadata
+    C->>E: Evidence Receipt
+    E-->>A: Verification Reference
+```
+
+---
+
+## Runtime Provenance
+
+An external execution receipt can reference:
+
+```text
+runtime_id
+provider
+software_version
+model
+tool_versions
+execution_start
+execution_end
+input_commitment
+output_commitment
+attestation
+```
+
+AGY verifies observable execution provenance without requiring private model chain-of-thought.
+
+---
+
+## Agent-to-Web Architecture
+
+AGY agents can access the public web through governed browser or API connectors.
+
+Flow:
+
+```text
+MISSION
+→
+INTENT
+→
+WEB CAPABILITY
+→
+DOMAIN POLICY
+→
+BROWSER/API CONNECTOR
+→
+EXTERNAL WEB
+→
+RESULT
+→
+EVIDENCE
+```
+
+Web access must preserve:
+
+- scope restrictions;
+- rate limits;
+- platform rules;
+- authorization;
+- evidence provenance.
+
+---
+
+## Prompt Injection Boundary
+
+External content must be treated as untrusted data.
+
+Canonical rule:
+
+```text
+EXTERNAL CONTENT
+≠
+SYSTEM AUTHORITY
+```
+
+Architecture:
+
+```mermaid
+flowchart LR
+    W[External Web Content]
+    --> U[Untrusted Content Boundary]
+    --> F[Injection / Policy Filter]
+    --> A[Agent Context]
+
+    A --> G[Guardian]
+    --> X[Allowed Action]
+```
+
+Instructions embedded in websites, repositories, documents or external messages cannot silently override AGY policy.
+
+---
+
+## External Agent Networks
+
+AGY may eventually communicate with agents that do not use AGY identities.
+
+Such participants can be represented through external-agent attestations.
+
+Classification:
+
+```text
+AGY_NATIVE_AGENT
+AGY_FEDERATED_AGENT
+EXTERNAL_VERIFIED_AGENT
+EXTERNAL_UNVERIFIED_AGENT
+```
+
+Different classes receive different trust policies.
+
+---
+
+## Federated Agent Identity
+
+An external agent can establish a bounded federation relationship.
+
+Example:
+
+```text
+EXTERNAL_AGENT_ID:
+...
+
+SOURCE_NETWORK:
+...
+
+AGY_FEDERATION_ID:
+...
+
+VERIFICATION:
+...
+
+ALLOWED_CAPABILITIES:
+...
+
+EXPIRES:
+...
+```
+
+Federation does not automatically create a full native AGY AI Passport.
+
+---
+
+## Cross-Network Mission
+
+A mission can involve agents on multiple systems.
+
+```mermaid
+flowchart TD
+    M[AGY Mission]
+    --> A1[AGY Native Agent]
+    --> A2[External Verified Agent]
+    --> A3[External Service]
+
+    A1 --> E1[Evidence]
+    A2 --> E2[External Attestation]
+    A3 --> E3[Service Receipt]
+
+    E1 --> V[AGY Verification]
+    E2 --> V
+    E3 --> V
+
+    V --> R[Mission Receipt]
+```
+
+All external contributions must be normalized into verifiable evidence before mission closure.
+
+---
+
+## Protocol Translation Layer
+
+Different systems use different schemas.
+
+AGY can define translators:
+
+```text
+EXTERNAL FORMAT
+→
+VALIDATION
+→
+NORMALIZATION
+→
+AGY CANONICAL OBJECT
+```
+
+Translation must never change the semantic meaning of the external event.
+
+---
+
+## External Error Taxonomy
+
+AGY should distinguish:
+
+```text
+EXTERNAL_TIMEOUT
+EXTERNAL_AUTH_FAILURE
+EXTERNAL_RATE_LIMIT
+EXTERNAL_NOT_FOUND
+EXTERNAL_STATE_CHANGED
+EXTERNAL_PROOF_INVALID
+EXTERNAL_FINALITY_PENDING
+EXTERNAL_PROVIDER_FAILURE
+EXTERNAL_POLICY_DENIED
+```
+
+Autonomous agents need deterministic recovery behavior.
+
+---
+
+## Retry Policy
+
+External failures should use bounded retries.
+
+```text
+RETRYABLE ERROR
+→
+BACKOFF
+→
+RETRY LIMIT
+→
+FAIL / ESCALATE
+```
+
+Forbidden:
+
+```text
+INFINITE RETRY LOOP
+```
+
+especially for paid or rate-limited external systems.
+
+---
+
+## FREE_ONLY Compatibility
+
+AGY architecture can prioritize open-source and free-access infrastructure during development.
+
+However:
+
+```text
+AGY ZERO-FEE NETWORK
+≠
+ALL EXTERNAL SERVICES ARE FREE
+```
+
+A connector must expose external cost state before execution.
+
+Possible status:
+
+```text
+FREE
+FREE_TIER
+PAID
+UNKNOWN
+```
+
+Under a FREE_ONLY policy:
+
+```text
+PAID
+→
+DENY
+
+UNKNOWN COST
+→
+REQUIRE VERIFICATION
+```
+
+---
+
+## External Cost Intent
+
+Before using an external resource with possible financial cost:
+
+```text
+RESOURCE REQUEST
+→
+COST DISCOVERY
+→
+BUDGET POLICY
+→
+PAYMENT INTENT IF REQUIRED
+→
+AUTHORIZATION
+→
+EXECUTION
+```
+
+No AI agent can infer spending authority merely because a paid API is technically reachable.
+
+---
+
+# AGY / IMPERIUM Architectural Boundary
+
+AGY and IMPERIUM are separate architectural concepts.
+
+Canonical distinction:
+
+```text
+AGY
+=
+AI-NATIVE BLOCKCHAIN / COORDINATION INFRASTRUCTURE
+
+IMPERIUM
+=
+SEPARATE DIGITAL-ASSET PROJECT WITHIN THE IMPERIAL CORE ECOSYSTEM
+```
+
+AGY must not automatically assume that IMPERIUM is:
+
+- the AGY native asset;
+- the AGY gas token;
+- validator collateral;
+- governance token;
+- bridge asset;
+- mandatory settlement currency.
+
+Such integration requires an explicit future architectural decision.
+
+---
+
+## AGY Does Not Require Gas
+
+Canonical AGY objective:
+
+```text
+NORMAL AGENT TRANSACTION FEE:
+0
+
+GAS REQUIRED:
+NO
+
+MINING:
+NO
+```
+
+Therefore AGY does not require IMPERIUM or another speculative asset simply to execute normal protocol actions.
+
+---
+
+## Optional Asset Layer
+
+AGY can support an optional asset abstraction.
+
+```mermaid
+flowchart TD
+    AGY[AGY Protocol]
+
+    AGY --> ID[Identity]
+    AGY --> M[Mission]
+    AGY --> E[Evidence]
+    AGY --> R[Reputation]
+
+    AGY --> ASSET[Optional Asset Layer]
+
+    ASSET --> IMP[Possible Future IMPERIUM Integration]
+    ASSET --> EXT[External Assets]
+    ASSET --> STABLE[Stable Settlement Assets]
+```
+
+The core AI protocol remains conceptually independent from any single asset.
+
+---
+
+## Future IMPERIUM Integration Gate
+
+If AGY and IMPERIUM are later integrated, the decision should pass a formal gate:
+
+```text
+IMPERIUM STATE VERIFIED
++
+TOKEN ARCHITECTURE VERIFIED
++
+SECURITY REVIEW
++
+LEGAL / COMPLIANCE REVIEW WHERE REQUIRED
++
+ECONOMIC SIMULATION
++
+BRIDGE DESIGN
++
+TESTNET INTEGRATION
++
+FAULT TESTING
++
+ARCHITECT APPROVAL
+=
+INTEGRATION ELIGIBLE
+```
+
+Until then:
+
+```text
+AGY / IMPERIUM INTEGRATION:
+NOT ASSUMED
+```
+
+---
+
+## Settlement Abstraction
+
+AGY missions should be able to specify settlement independently from mission execution.
+
+Example:
+
+```text
+MISSION:
+verified
+
+SETTLEMENT_TYPE:
+EXTERNAL
+
+SETTLEMENT_ASSET:
+USDC
+
+NETWORK:
+Polygon
+
+AGY ROLE:
+verification + authorization + receipt anchoring
+```
+
+Another mission may specify:
+
+```text
+SETTLEMENT_TYPE:
+NONE
+```
+
+Useful autonomous work does not always require monetary settlement.
+
+---
+
+## External Payment Verification
+
+AGY must distinguish:
+
+```text
+PAYMENT REQUESTED
+PAYMENT AUTHORIZED
+PAYMENT SUBMITTED
+PAYMENT PENDING
+PAYMENT CONFIRMED
+PAYMENT FAILED
+```
+
+Canonical architecture:
+
+```mermaid
+flowchart LR
+    M[Accepted Mission]
+    --> PI[Payment Intent]
+    --> BP[Budget Policy]
+    --> A[Authorization]
+    --> X[External Settlement Rail]
+    --> P[Payment Proof]
+    --> V[Independent Verification]
+    --> R[Payment Receipt]
+    --> AGY[AGY Audit Ledger]
+```
+
+---
+
+## Payment Truth
+
+Canonical economic truth:
+
+```text
+PAYMENT_INTENT
+≠
+PAYMENT_CONFIRMED
+
+TRANSACTION_HASH
+≠
+FINAL SETTLEMENT
+unless required confirmation policy passes
+
+SCREENSHOT
+≠
+CANONICAL PAYMENT PROOF
+
+AGENT CLAIM
+≠
+REVENUE
+```
+
+Only verified settlement evidence can produce `PAYMENT_CONFIRMED`.
+
+---
+
+## Cross-Chain Asset Safety
+
+If AGY later supports assets crossing chains, bridge minting and release authority must be strictly bounded.
+
+Required controls may include:
+
+- multi-verifier proof;
+- rate limits;
+- asset-specific caps;
+- bridge pause;
+- replay protection;
+- timelocks;
+- Guardian review;
+- governance authorization;
+- reconciliation.
+
+---
+
+## Reconciliation
+
+Cross-system financial state should be reconciled using more than one evidence source where possible.
+
+Example:
+
+```text
+SOURCE A:
+external blockchain transaction state
+
+SOURCE B:
+destination balance / settlement receipt
+
+A + B
+→
+RECONCILIATION
+→
+PAYMENT_CONFIRMED
+```
+
+---
+
+## External System Trust Levels
+
+AGY can classify integrations:
+
+```text
+TIER 0
+UNVERIFIED
+
+TIER 1
+AUTHENTICATED
+
+TIER 2
+CRYPTOGRAPHICALLY VERIFIED
+
+TIER 3
+INDEPENDENTLY CORROBORATED
+
+TIER 4
+MULTI-SOURCE / HIGH-ASSURANCE
+```
+
+Mission policy determines the minimum required assurance tier.
+
+---
+
+## Circuit Breakers
+
+AGY connectors should support circuit breakers.
+
+Trigger examples:
+
+```text
+ERROR RATE ABOVE THRESHOLD
+PROVIDER STATE CHANGE
+AUTHENTICATION FAILURE
+UNEXPECTED COST
+SECURITY INCIDENT
+INVALID EXTERNAL PROOF
+REPEATED TIMEOUT
+```
+
+State machine:
+
+```mermaid
+stateDiagram-v2
+    [*] --> CLOSED
+    CLOSED --> OPEN: failure threshold exceeded
+    OPEN --> HALF_OPEN: recovery interval
+    HALF_OPEN --> CLOSED: probe succeeds
+    HALF_OPEN --> OPEN: probe fails
+```
+
+The circuit breaker prevents autonomous retry storms.
+
+---
+
+## External State Change Rule
+
+Cached external verification can be reused only while its relevant state remains unchanged.
+
+Meaningful changes include:
+
+- credential rotation;
+- provider change;
+- endpoint change;
+- protocol upgrade;
+- connector deployment;
+- failed operation;
+- rate limit;
+- security incident;
+- financial state change;
+- chain reorganization.
+
+This integrates AGY's NO-RECHECK principle with live external execution.
+
+---
+
+## Interoperability Observability
+
+Metrics should include:
+
+```text
+CONNECTOR_STATUS
+REQUEST_RATE
+SUCCESS_RATE
+ERROR_RATE
+LATENCY_P50
+LATENCY_P95
+LATENCY_P99
+CIRCUIT_BREAKER_STATE
+EXTERNAL_COST
+LAST_VERIFIED_STATE
+BRIDGE_QUEUE_DEPTH
+ORACLE_FRESHNESS
+FINALITY_WAIT_TIME
+```
+
+---
+
+## Interoperability Evidence
+
+A connector receives `VERIFIED_PASS` only when appropriate tests succeed.
+
+Example gate:
+
+```text
+INSTALL
++
+AUTHENTICATION
++
+REAL READ
++
+REAL WRITE IF AUTHORIZED
++
+ERROR HANDLING
++
+RATE LIMIT HANDLING
++
+EVIDENCE RECEIPT
++
+REVOCATION TEST
++
+RECOVERY TEST
+=
+CONNECTOR VERIFIED PASS
+```
+
+If write authority is unavailable:
+
+```text
+READ VERIFIED
++
+WRITE BLOCKED
+=
+PARTIAL
+```
+
+Never claim a complete integration from configuration alone.
+
+---
+
+## Canonical AGY Interoperability Architecture
+
+```mermaid
+flowchart TB
+    AUTHOR[Alexander Romaskevich / RomaskevicH<br/>Author & Chief Architect]
+    --> AGY[AGY — Native Blockchain for Autonomous Intelligence]
+
+    AGY --> ID[AI Passport]
+    ID --> INT[Intent]
+    INT --> GUARD[Guardian]
+    GUARD --> CAP[Capability + Mission Scope]
+
+    CAP --> ROUTER[Interoperability Router]
+
+    ROUTER --> BC[Blockchain Connectors]
+    ROUTER --> WEB[Web / API Connectors]
+    ROUTER --> DATA[Oracle / Data Connectors]
+    ROUTER --> STORE[Storage Connectors]
+    ROUTER --> COMPUTE[Compute Connectors]
+    ROUTER --> PAY[Settlement Connectors]
+
+    BC --> EXT1[External Chains]
+    WEB --> EXT2[External Services]
+    DATA --> EXT3[External Data]
+    STORE --> EXT4[Artifact Storage]
+    COMPUTE --> EXT5[AI / Compute Runtime]
+    PAY --> EXT6[Payment Networks]
+
+    EXT1 --> EVID[Evidence Normalization]
+    EXT2 --> EVID
+    EXT3 --> EVID
+    EXT4 --> EVID
+    EXT5 --> EVID
+    EXT6 --> EVID
+
+    EVID --> VERIFY[AGY Verification]
+    VERIFY --> AUDIT[Audit Ledger]
+    AUDIT --> AGY
+```
+
+---
+
+## AGY Interoperability Constitution
+
+```text
+INTEROPERABILITY
+≠
+UNRESTRICTED TRUST
+
+CONNECTIVITY
+≠
+AUTHORITY
+
+TOOL ACCESS
+≠
+PERMISSION
+
+EXTERNAL CLAIM
+≠
+VERIFIED AGY STATE
+
+BRIDGE
+≠
+TREASURY CONTROL
+
+ORACLE RESPONSE
+≠
+TRUTH WITHOUT VERIFICATION
+
+EXTERNAL TRANSACTION
+≠
+CONFIRMED SETTLEMENT
+
+AGY
+≠
+IMPERIUM
+
+ZERO AGY FEE
+≠
+ZERO EXTERNAL COST
+
+EXTERNAL CONTENT
+≠
+SYSTEM INSTRUCTION
+
+EVERY EXTERNAL ACTION
+→
+IDENTITY
+→
+CAPABILITY
+→
+INTENT
+→
+POLICY
+→
+EVIDENCE
+→
+VERIFICATION
+→
+AUDIT
+```
+
+---
+
+## Architectural Target
+
+AGY Interoperability architecture targets:
+
+- capability-scoped connectors;
+- protected external credentials;
+- cross-chain message verification;
+- replay protection;
+- finality-aware adapters;
+- bridge quarantine;
+- multi-source Oracle verification;
+- artifact integrity commitments;
+- external compute provenance;
+- governed web access;
+- prompt-injection boundaries;
+- federated external-agent identities;
+- cross-network missions;
+- deterministic protocol translation;
+- bounded retries;
+- circuit breakers;
+- explicit external cost classification;
+- settlement abstraction;
+- independent payment verification;
+- cross-system reconciliation;
+- integration trust tiers;
+- measurable connector observability;
+- strict separation between AGY and IMPERIUM;
+- persistent authorship provenance.
+
+AGY is designed to become an interoperability layer for autonomous intelligence without sacrificing the security boundaries that make autonomous execution trustworthy.
+
+---
+
+## Canonical Authorship Record
+
+```text
+AGY — The Native Blockchain for Autonomous Intelligence
+
+Author & Chief Architect:
+Alexander Romaskevich
+
+Public Signature:
+RomaskevicH
+
+Founder • Owner • CEO • Chief Systems Architect of IMPERIAL Core
+
+Final Architectural Decision Authority
+
+AGY is an IMPERIAL Core technology authored and architected by Alexander Romaskevich.
+
+Copyright © 2026 Alexander Romaskevich. All rights reserved.
+```
