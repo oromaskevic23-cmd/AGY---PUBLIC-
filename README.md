@@ -2360,3 +2360,1146 @@ AGY Evidence and Security architecture targets:
 - explicit evidence states.
 
 AGY is designed so that autonomous intelligence can operate at high speed without requiring blind trust.
+## AGY Validator Network, Governance, Upgrade & Recovery Architecture
+
+AGY requires a validator architecture designed for high-speed autonomous-agent traffic while preserving deterministic finality, fault tolerance, governance accountability and clear separation of powers.
+
+The validator layer exists to maintain consensus.
+
+It must not automatically control:
+
+- AI agent identities;
+- owner assets;
+- mission authority;
+- capability grants;
+- treasury funds;
+- private agent data;
+- organizational governance;
+- external wallets.
+
+Consensus authority and economic authority remain separate.
+
+---
+
+## Validator Role
+
+An AGY validator is responsible for:
+
+- validating protocol transactions;
+- participating in consensus;
+- maintaining canonical state;
+- verifying signatures;
+- enforcing deterministic protocol rules;
+- rejecting malformed or unauthorized state transitions;
+- propagating finalized blocks;
+- exposing verifiable network state.
+
+A validator is not an all-powerful AGY administrator.
+
+Canonical separation:
+
+```mermaid
+flowchart TD
+    V[Validator Authority]
+
+    V --> C[Consensus]
+    V --> S[State Validation]
+    V --> B[Block Finalization]
+
+    V -. does not imply .-> T[Treasury Authority]
+    V -. does not imply .-> A[Agent Authority]
+    V -. does not imply .-> G[Governance Override]
+    V -. does not imply .-> O[Owner Asset Control]
+```
+
+---
+
+## Initial Validator Topology
+
+AGY development should begin with a deliberately small validator set.
+
+Canonical rollout:
+
+```text
+1 NODE LOCAL DEV
+→
+3 VALIDATOR DEVNET
+→
+4 VALIDATOR TESTNET
+→
+7 VALIDATOR DISTRIBUTED TESTNET
+→
+FAULT TESTING
+→
+GEOGRAPHIC DISTRIBUTION
+→
+PRODUCTION READINESS GATE
+```
+
+The exact validator count for mainnet must be determined from measured resilience, infrastructure and governance requirements.
+
+---
+
+## Byzantine Fault Tolerance
+
+For a classical BFT model:
+
+```text
+N >= 3F + 1
+```
+
+where:
+
+`N` = total validators
+
+`F` = Byzantine validators tolerated
+
+Examples:
+
+```text
+4 validators
+→ tolerate 1 Byzantine validator
+
+7 validators
+→ tolerate 2 Byzantine validators
+
+10 validators
+→ tolerate 3 Byzantine validators
+```
+
+AGY must verify the actual behavior of its selected consensus implementation rather than relying solely on theoretical guarantees.
+
+---
+
+## Validator State Machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> CANDIDATE
+    CANDIDATE --> VALIDATING
+    VALIDATING --> ACTIVE
+    ACTIVE --> DEGRADED
+    ACTIVE --> SUSPENDED
+    DEGRADED --> ACTIVE
+    DEGRADED --> SUSPENDED
+    SUSPENDED --> RECOVERY
+    RECOVERY --> ACTIVE
+    ACTIVE --> RETIRING
+    RETIRING --> RETIRED
+    RETIRED --> [*]
+```
+
+Every validator state transition should be auditable.
+
+---
+
+## Validator Identity
+
+Every validator receives a persistent network identity separate from ordinary AI-agent identity.
+
+A validator identity can include:
+
+```text
+validator_id
+consensus_public_key
+operator_identity
+network_endpoint
+protocol_version
+software_version
+activation_height
+governance_status
+health_state
+region
+attestation_state
+```
+
+Private keys remain outside public consensus state.
+
+---
+
+## Validator Admission
+
+Validator membership must not occur automatically because a machine can run AGY software.
+
+Admission can require:
+
+- governance authorization;
+- validator identity registration;
+- compatible protocol version;
+- cryptographic key proof;
+- health verification;
+- network connectivity test;
+- security policy compliance;
+- synchronization proof.
+
+Canonical flow:
+
+```mermaid
+flowchart LR
+    C[Candidate]
+    --> I[Identity]
+    --> K[Key Proof]
+    --> H[Health Test]
+    --> S[Sync Test]
+    --> P[Policy Check]
+    --> G[Governance Approval]
+    --> A[Active Validator]
+```
+
+---
+
+## Validator Removal
+
+A validator can be removed or suspended for:
+
+- prolonged unavailability;
+- invalid block proposals;
+- Byzantine behavior;
+- incompatible software;
+- compromised keys;
+- repeated consensus failures;
+- governance decision;
+- security incident.
+
+Removal does not erase historical participation.
+
+The event remains permanently auditable.
+
+---
+
+## No Mandatory Financial Staking
+
+AGY does not need to require speculative token staking merely to operate consensus.
+
+The initial architecture can use permissioned or federated validator membership with governance-based admission.
+
+Validator accountability can be enforced through:
+
+- identity;
+- governance;
+- cryptographic attribution;
+- reputation;
+- operational policies;
+- removal;
+- suspension;
+- audit evidence.
+
+A future economic staking model, if ever introduced, requires a separate architectural and economic decision.
+
+---
+
+## Validator Reputation
+
+Validator reliability can be measured separately from AI-agent reputation.
+
+Possible metrics:
+
+```text
+UPTIME
+CONSENSUS PARTICIPATION
+BLOCK PROPOSAL SUCCESS
+VALID VOTE RATE
+SYNC RELIABILITY
+FAULT RECOVERY
+SOFTWARE COMPLIANCE
+NETWORK LATENCY
+```
+
+Validator reputation is operational evidence.
+
+It does not grant unrelated financial authority.
+
+---
+
+## Geographic Distribution
+
+A production network should avoid placing all validators in:
+
+- one provider;
+- one data center;
+- one country;
+- one cloud account;
+- one failure domain.
+
+Target topology:
+
+```mermaid
+graph TD
+    AGY[AGY Network]
+
+    AGY --> EU[Europe Validator Group]
+    AGY --> US[North America Validator Group]
+    AGY --> AS[Asia Validator Group]
+
+    EU --> V1[Validator 1]
+    EU --> V2[Validator 2]
+
+    US --> V3[Validator 3]
+    US --> V4[Validator 4]
+
+    AS --> V5[Validator 5]
+    AS --> V6[Validator 6]
+
+    AGY --> V7[Independent Validator 7]
+```
+
+This is a topology target, not a claim of current deployment.
+
+---
+
+## Provider Diversity
+
+Infrastructure resilience improves when validators do not depend on a single provider.
+
+Possible future deployment mix:
+
+```text
+Provider A
+Provider B
+Provider C
+Independent Server
+Community Validator
+Organization Validator
+Research Validator
+```
+
+A provider outage should not automatically stop AGY consensus.
+
+---
+
+## Consensus Network Separation
+
+AGY should separate public RPC traffic from consensus traffic where possible.
+
+```mermaid
+flowchart LR
+    USERS[Agents / Applications]
+    --> RPC[Public RPC Layer]
+
+    RPC --> N1[AGY Node]
+
+    N1 --> V1[Validator]
+    V1 <--> V2[Validator]
+    V2 <--> V3[Validator]
+    V3 <--> V4[Validator]
+
+    CONSENSUS[Private / Controlled Consensus Network]
+    --- V1
+    --- V2
+    --- V3
+    --- V4
+```
+
+Public request floods should not directly overwhelm consensus communication.
+
+---
+
+## RPC Gateway Layer
+
+Public access can pass through dedicated RPC gateways.
+
+Responsibilities include:
+
+- request validation;
+- rate limiting;
+- caching;
+- query distribution;
+- protocol version negotiation;
+- abuse detection;
+- WebSocket management;
+- metrics.
+
+RPC gateways do not become consensus authorities.
+
+---
+
+## Read Nodes
+
+AGY can support non-validator read nodes.
+
+Read nodes can provide:
+
+- blockchain queries;
+- historical state;
+- explorer data;
+- analytics;
+- indexing;
+- public APIs.
+
+They reduce load on validators.
+
+Architecture:
+
+```mermaid
+flowchart TD
+    V[Validator Network]
+    --> R1[Read Node]
+    --> API[API Gateway]
+    --> A[AI Agents]
+
+    V --> R2[Index Node]
+    R2 --> E[AGY Explorer]
+
+    V --> R3[Archive Node]
+```
+
+---
+
+## Archive Nodes
+
+Not every validator should be required to retain unlimited historical application data.
+
+AGY can distinguish:
+
+```text
+VALIDATOR NODE
+FULL NODE
+READ NODE
+INDEX NODE
+ARCHIVE NODE
+```
+
+This allows optimized resource profiles.
+
+---
+
+## Snapshot Synchronization
+
+New nodes should be able to bootstrap from verified state snapshots.
+
+Canonical flow:
+
+```text
+GENESIS
++
+TRUSTED CHECKPOINT
++
+STATE SNAPSHOT
++
+BLOCK VERIFICATION
+=
+SYNCHRONIZED NODE
+```
+
+Snapshots require cryptographic verification.
+
+They must never replace consensus verification with blind trust in an arbitrary download.
+
+---
+
+## Checkpoints
+
+AGY can periodically publish finalized state checkpoints.
+
+Example:
+
+```text
+BLOCK HEIGHT:
+10,000,000
+
+STATE ROOT:
+0x...
+
+VALIDATOR SET ROOT:
+0x...
+
+POLICY ROOT:
+0x...
+
+AGENT REGISTRY ROOT:
+0x...
+```
+
+Checkpoints improve synchronization and independent auditing.
+
+---
+
+## Network Governance
+
+AGY governance manages protocol-level decisions.
+
+Governance must be distinct from routine AI-agent execution.
+
+Possible governance domains:
+
+- protocol upgrades;
+- validator membership;
+- consensus parameters;
+- security policies;
+- emergency modes;
+- network limits;
+- protocol module activation;
+- bridge activation;
+- genesis parameters.
+
+Governance should not micromanage individual normal missions.
+
+---
+
+## Governance Proposal Lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> DRAFT
+    DRAFT --> REVIEW
+    REVIEW --> VOTING
+    VOTING --> APPROVED
+    VOTING --> REJECTED
+    APPROVED --> TIMELOCKED
+    TIMELOCKED --> EXECUTABLE
+    EXECUTABLE --> EXECUTED
+    EXECUTED --> VERIFIED
+    VERIFIED --> [*]
+    REJECTED --> [*]
+```
+
+A passed proposal is not equivalent to successful implementation.
+
+Execution must still be verified.
+
+---
+
+## Governance Proposal Object
+
+A proposal can contain:
+
+```text
+proposal_id
+proposal_type
+author
+description_hash
+target_module
+requested_change
+risk_class
+voting_start
+voting_end
+required_threshold
+timelock
+implementation_reference
+verification_plan
+```
+
+This creates machine-readable governance.
+
+---
+
+## Governance Classes
+
+AGY can classify proposals by risk.
+
+Example:
+
+```text
+CLASS 1
+Routine parameter adjustment
+
+CLASS 2
+Protocol module update
+
+CLASS 3
+Validator membership change
+
+CLASS 4
+Consensus modification
+
+CLASS 5
+Root security / emergency governance
+```
+
+Higher-risk classes require stronger approval thresholds and longer timelocks.
+
+---
+
+## Timelocked Governance
+
+Critical changes should not execute immediately after approval.
+
+Flow:
+
+```mermaid
+flowchart LR
+    P[Proposal]
+    --> V[Vote]
+    --> A[Approved]
+    --> T[Timelock]
+    --> R[Final Review]
+    --> X[Execution]
+    --> E[Evidence]
+```
+
+Timelocks allow:
+
+- security review;
+- validator preparation;
+- software distribution;
+- rollback planning;
+- public audit.
+
+Emergency exceptions require explicit emergency governance rules.
+
+---
+
+## Protocol Versioning
+
+Every AGY node should expose its protocol version.
+
+Example:
+
+```text
+AGY_PROTOCOL_VERSION:
+1.2.0
+
+CONSENSUS_VERSION:
+1.0
+
+STATE_VERSION:
+4
+
+AI_PASSPORT_VERSION:
+2
+
+MISSION_PROTOCOL_VERSION:
+3
+```
+
+Version compatibility must be deterministic.
+
+---
+
+## Upgrade Architecture
+
+AGY upgrades follow:
+
+```text
+PROPOSAL
+→
+SPECIFICATION
+→
+IMPLEMENTATION
+→
+TEST
+→
+SECURITY REVIEW
+→
+GOVERNANCE APPROVAL
+→
+TIMELOCK
+→
+VALIDATOR READINESS
+→
+ACTIVATION HEIGHT
+→
+EXECUTION
+→
+RUNTIME VERIFICATION
+```
+
+No upgrade receives VERIFIED PASS before post-activation runtime evidence exists.
+
+---
+
+## Activation Height
+
+Protocol upgrades can activate at a predetermined block height.
+
+Example:
+
+```text
+UPGRADE:
+AGY-2
+
+ACTIVATION_HEIGHT:
+8,500,000
+
+MINIMUM_NODE_VERSION:
+2.0.0
+```
+
+Validators know exactly when the new rules become active.
+
+---
+
+## Upgrade Readiness
+
+Before activation, the network can monitor validator readiness.
+
+```mermaid
+flowchart TD
+    U[Approved Upgrade]
+    --> V1[Validator 1 Ready]
+    --> R[Readiness Monitor]
+
+    U --> V2[Validator 2 Ready]
+    V2 --> R
+
+    U --> V3[Validator 3 Not Ready]
+    V3 --> R
+
+    R --> D{Threshold Met?}
+
+    D -->|YES| A[Activate]
+    D -->|NO| H[Hold / Delay]
+```
+
+This reduces accidental network splits.
+
+---
+
+## Backward Compatibility
+
+Where practical, AGY should preserve backward compatibility.
+
+Breaking changes require:
+
+- explicit version boundary;
+- migration specification;
+- test vectors;
+- data migration plan;
+- rollback strategy.
+
+Silent breaking changes are prohibited.
+
+---
+
+## State Migration
+
+If an upgrade changes state structure:
+
+```text
+OLD STATE
+→
+VALIDATION
+→
+DETERMINISTIC MIGRATION
+→
+NEW STATE
+→
+STATE ROOT
+→
+VERIFICATION
+```
+
+Every validator must calculate the same migrated state.
+
+---
+
+## Network Fork Protection
+
+AGY should detect incompatible validator states.
+
+Possible signals:
+
+- different protocol versions;
+- divergent state roots;
+- incompatible validator sets;
+- conflicting finalized heights;
+- unexpected consensus parameters.
+
+The network should prefer safe halt or explicit recovery over silently operating with inconsistent finality.
+
+---
+
+## Safety Over Liveness
+
+During severe consensus uncertainty:
+
+```text
+SAFETY
+>
+LIVENESS
+```
+
+It is preferable for AGY to temporarily stop finalizing transactions than to finalize contradictory states.
+
+This is especially important for autonomous economic activity.
+
+---
+
+## Recovery Architecture
+
+AGY must have an explicit recovery procedure.
+
+```mermaid
+flowchart TD
+    F[Critical Failure]
+    --> D[Detect]
+    --> H[Safe Halt]
+    --> E[Collect Evidence]
+    --> C[Determine Canonical State]
+    --> G[Governance Recovery Decision]
+    --> S[Restore State]
+    --> V[Verify Validators]
+    --> R[Resume]
+    --> A[Post-Incident Audit]
+```
+
+Recovery must not depend on improvisation during an incident.
+
+---
+
+## Recovery Checkpoint
+
+A network recovery can anchor to a known finalized checkpoint.
+
+Required evidence may include:
+
+```text
+last_safe_height
+state_root
+validator_set
+policy_root
+protocol_version
+incident_reference
+recovery_authorization
+```
+
+All participants can independently verify the recovery basis.
+
+---
+
+## Key Rotation
+
+Validator keys must support controlled rotation.
+
+Flow:
+
+```text
+CURRENT KEY
+→
+ROTATION INTENT
+→
+AUTHORIZATION
+→
+NEW KEY PROOF
+→
+ACTIVATION HEIGHT
+→
+OLD KEY REVOCATION
+→
+AUDIT RECEIPT
+```
+
+Key rotation must not erase validator history.
+
+---
+
+## Compromised Validator
+
+If a validator key is suspected compromised:
+
+```mermaid
+flowchart LR
+    A[Anomaly Detected]
+    --> S[Suspend Validator]
+    --> R[Revoke Consensus Key]
+    --> Q[Quorum Recalculation]
+    --> K[Rotate / Replace Key]
+    --> V[Verify Recovery]
+    --> A2[Reactivate if Approved]
+```
+
+The process must preserve network safety.
+
+---
+
+## Emergency Governance
+
+AGY can define an emergency governance path for catastrophic events.
+
+Possible emergency actions:
+
+- suspend validator;
+- pause bridge;
+- restrict high-risk transaction class;
+- freeze protocol upgrade;
+- activate recovery mode.
+
+Emergency governance cannot silently rewrite historical finalized state.
+
+All emergency actions require audit evidence.
+
+---
+
+## Constitutional Boundaries
+
+Certain AGY principles should be harder to modify than ordinary parameters.
+
+Examples:
+
+```text
+Identity ≠ Authority
+Capability ≠ Approval
+Intelligence ≠ Privilege
+Claim ≠ Evidence
+Validator Authority ≠ Financial Authority
+```
+
+Changing foundational security principles should require the strongest governance process.
+
+---
+
+## Governance Separation of Powers
+
+AGY governance can use separate authorities.
+
+```mermaid
+graph TD
+    G[AGY Governance]
+
+    G --> P[Protocol Governance]
+    G --> V[Validator Governance]
+    G --> S[Security Governance]
+    G --> E[Economic Governance]
+
+    P -. separated from .-> E
+    V -. separated from .-> E
+    S -. emergency limits .-> P
+```
+
+No single subsystem should automatically inherit all governance power.
+
+---
+
+## Governance Evidence
+
+Every governance action can create:
+
+- proposal hash;
+- vote evidence;
+- approval result;
+- timelock evidence;
+- implementation reference;
+- execution receipt;
+- post-upgrade verification.
+
+Canonical rule:
+
+```text
+APPROVED
+≠
+IMPLEMENTED
+
+IMPLEMENTED
+≠
+VERIFIED
+
+VERIFIED
+requires
+RUNTIME EVIDENCE
+```
+
+---
+
+## Network Observability
+
+Validators and nodes should expose standardized telemetry.
+
+Metrics can include:
+
+```text
+BLOCK_HEIGHT
+BLOCK_TIME
+FINALITY_LATENCY
+PEER_COUNT
+VALIDATOR_STATUS
+CONSENSUS_ROUND
+CPU
+MEMORY
+DISK
+BANDWIDTH
+RPC_LATENCY
+FAILED_TRANSACTIONS
+QUEUE_DEPTH
+```
+
+Telemetry must not expose private keys, secrets or sensitive agent data.
+
+---
+
+## AGY Network Health
+
+AGY can calculate a network health state:
+
+```text
+HEALTHY
+DEGRADED
+AT_RISK
+HALTED
+RECOVERING
+```
+
+Example decision model:
+
+```mermaid
+flowchart TD
+    M[Telemetry]
+    --> C[Consensus Health]
+    --> P[Peer Health]
+    --> V[Validator Health]
+    --> R[Resource Health]
+    --> H{Network State}
+
+    H --> A[HEALTHY]
+    H --> B[DEGRADED]
+    H --> D[AT_RISK]
+    H --> E[HALTED]
+```
+
+---
+
+## No-Recheck Integration
+
+AGY network monitoring should distinguish continuous telemetry from unnecessary repeated verification.
+
+Live health metrics can be continuously observed.
+
+Deep architectural checks should only rerun after relevant state changes.
+
+Example:
+
+```text
+LIVE TELEMETRY:
+continuous
+
+FULL VALIDATOR SECURITY AUDIT:
+on state change / scheduled assurance event
+
+GENESIS VALIDATION:
+reuse verified evidence unless genesis changes
+```
+
+This preserves resources while retaining operational awareness.
+
+---
+
+## Validator Definition of Done
+
+A validator is not considered production-ready merely because the process starts.
+
+Required evidence should eventually include:
+
+```text
+PROCESS RUNNING
++
+PEER CONNECTION
++
+BLOCK SYNC
++
+CONSENSUS PARTICIPATION
++
+FINALIZATION
++
+RESTART RECOVERY
++
+FAULT TEST
++
+RESOURCE TEST
++
+SECURITY CHECK
+=
+VALIDATOR VERIFIED PASS
+```
+
+---
+
+## AGY Governance Definition of Done
+
+A governance system is not verified merely because voting code exists.
+
+Required testing should include:
+
+```text
+PROPOSAL CREATION
++
+VALIDATION
++
+VOTING
++
+THRESHOLD CALCULATION
++
+TIMELOCK
++
+EXECUTION
++
+FAILED EXECUTION HANDLING
++
+AUDIT RECEIPT
++
+UPGRADE ACTIVATION
++
+RECOVERY
+=
+GOVERNANCE VERIFIED PASS
+```
+
+---
+
+## Canonical AGY Network Architecture
+
+```mermaid
+flowchart TB
+    AGENTS[Autonomous AI Agents]
+    --> RPC[AGY RPC Gateway]
+
+    RPC --> READ[Read / Query Nodes]
+    RPC --> TX[Transaction Admission]
+
+    TX --> GUARD[Guardian + Policy]
+    GUARD --> MEMPOOL[Validated Transaction Pool]
+
+    MEMPOOL --> CONSENSUS[AGY BFT Consensus]
+
+    CONSENSUS --> V1[Validator 1]
+    CONSENSUS --> V2[Validator 2]
+    CONSENSUS --> V3[Validator 3]
+    CONSENSUS --> VN[Validator N]
+
+    CONSENSUS --> STATE[Canonical AGY State]
+
+    STATE --> EVIDENCE[Evidence Layer]
+    STATE --> PASSPORT[AI Passport Registry]
+    STATE --> MISSION[Mission State]
+    STATE --> REPUTATION[Reputation Ledger]
+
+    GOV[AGY Governance]
+    --> CONSENSUS
+
+    GUARDIAN[Security Governance]
+    --> GUARD
+
+    STATE --> INDEX[Index Nodes]
+    INDEX --> EXPLORER[AGY Explorer]
+```
+
+---
+
+## Architectural Target
+
+AGY Validator and Governance architecture targets:
+
+- Byzantine Fault Tolerant consensus;
+- explicit validator identity;
+- permissioned initial validator admission;
+- no mandatory speculative staking;
+- geographic distribution;
+- provider diversity;
+- separate RPC and consensus layers;
+- read and archive nodes;
+- snapshot synchronization;
+- cryptographic checkpoints;
+- machine-readable governance;
+- risk-classified proposals;
+- timelocked upgrades;
+- deterministic activation heights;
+- validator readiness monitoring;
+- deterministic state migration;
+- fork protection;
+- safety-over-liveness recovery;
+- validator key rotation;
+- emergency governance;
+- constitutional security boundaries;
+- governance separation of powers;
+- network telemetry;
+- evidence-based validator readiness.
+
+AGY consensus must remain fast enough for autonomous intelligence while governance remains deliberate enough to protect the network from autonomous mistakes, compromised nodes and unsafe protocol changes.
