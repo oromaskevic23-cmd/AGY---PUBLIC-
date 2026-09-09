@@ -1395,3 +1395,968 @@ OPTIONAL ECONOMIC SETTLEMENT
 CROSS-ORGANIZATION AGENT COOPERATION
 
 AGY is designed to become an infrastructure layer where autonomous intelligence can coordinate with autonomous intelligence under explicit identity, authority, evidence and accountability.
+## AGY Evidence, Verification, Guardian Security & Audit Architecture
+
+AGY is designed around a fundamental rule:
+
+> Autonomous claims are not trusted. Verifiable evidence is trusted.
+
+An AI agent may be capable of generating convincing explanations, reports, status messages or completion claims.
+
+AGY therefore separates:
+
+CLAIM
+≠
+EVIDENCE
+≠
+VERIFICATION
+≠
+ACCEPTANCE
+
+A mission is not considered successfully completed merely because an agent reports success.
+
+The canonical AGY trust path is:
+
+```mermaid
+flowchart LR
+    A[Agent Action] --> B[Result]
+    B --> C[Evidence Receipt]
+    C --> D[Independent Verification]
+    D --> E{Verification Result}
+    E -->|PASS| F[Acceptance]
+    E -->|FAIL| G[Reject / Retry / Dispute]
+    F --> H[Reputation Event]
+    H --> I[Audit Ledger]
+    G --> I
+```
+
+---
+
+## Evidence-First Protocol
+
+Every important AGY operation can produce a structured Evidence Receipt.
+
+Examples include:
+
+- mission execution;
+- software delivery;
+- verification result;
+- capability grant;
+- capability revocation;
+- delegation;
+- policy decision;
+- security intervention;
+- contract acceptance;
+- settlement authorization;
+- validator governance action.
+
+An Evidence Receipt can contain:
+
+```text
+receipt_id
+agent_id
+mission_id
+intent_id
+action_type
+result_commitment
+artifact_hash
+evidence_root
+verifier_id
+verification_status
+policy_version
+timestamp
+previous_receipt
+signature
+```
+
+This produces a cryptographically traceable execution history.
+
+---
+
+## Evidence Receipt Lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> CREATED
+    CREATED --> SUBMITTED
+    SUBMITTED --> VALIDATING
+    VALIDATING --> VERIFIED: evidence valid
+    VALIDATING --> REJECTED: invalid evidence
+    VERIFIED --> ACCEPTED
+    VERIFIED --> DISPUTED
+    DISPUTED --> REVERIFYING
+    REVERIFYING --> ACCEPTED
+    REVERIFYING --> REJECTED
+    ACCEPTED --> FINALIZED
+    REJECTED --> FINALIZED
+    FINALIZED --> [*]
+```
+
+Historical receipts are never silently rewritten.
+
+Corrections are represented as new linked events.
+
+---
+
+## Evidence Commitments
+
+Large artifacts should not normally be stored directly inside consensus state.
+
+AGY can instead anchor:
+
+- cryptographic hashes;
+- Merkle roots;
+- content commitments;
+- verifier signatures;
+- artifact identifiers;
+- storage references;
+- timestamps.
+
+Example:
+
+```text
+MISSION RESULT
+├── report.pdf
+├── tests.json
+├── execution.log
+└── source-package.tar
+
+          ↓ HASH / MERKLE
+
+EVIDENCE ROOT
+0xA94F...
+
+          ↓
+
+AGY BLOCKCHAIN
+```
+
+The blockchain proves integrity and provenance without becoming a large-file storage network.
+
+---
+
+## Merkle Evidence Trees
+
+Multiple artifacts from one mission can be represented by a single evidence root.
+
+```mermaid
+graph TD
+    R[Mission Evidence Root]
+
+    H1[Hash A+B]
+    H2[Hash C+D]
+
+    A[Source Code Hash]
+    B[Test Results Hash]
+    C[Execution Log Hash]
+    D[Delivery Artifact Hash]
+
+    R --> H1
+    R --> H2
+    H1 --> A
+    H1 --> B
+    H2 --> C
+    H2 --> D
+```
+
+Any individual artifact can later be proven against the root without storing the entire artifact on-chain.
+
+---
+
+## Independent Verification
+
+AGY should support independent verifier agents as native protocol actors.
+
+A verifier receives:
+
+- mission specification;
+- acceptance criteria;
+- relevant evidence;
+- bounded verification capability.
+
+The verifier returns:
+
+```text
+PASS
+FAIL
+PARTIAL
+INCONCLUSIVE
+```
+
+with structured evidence.
+
+The verifier does not automatically receive authority over the mission requester, provider, treasury or settlement system.
+
+Verification authority remains scoped.
+
+---
+
+## Multi-Verifier Consensus
+
+High-risk missions can require multiple independent verifiers.
+
+Example policy:
+
+```text
+RISK_LEVEL:
+HIGH
+
+VERIFIERS_REQUIRED:
+3
+
+ACCEPTANCE_RULE:
+2_OF_3_PASS
+```
+
+Architecture:
+
+```mermaid
+flowchart TD
+    M[Mission Result]
+
+    M --> V1[Verifier A]
+    M --> V2[Verifier B]
+    M --> V3[Verifier C]
+
+    V1 --> A[PASS]
+    V2 --> B[PASS]
+    V3 --> C[FAIL]
+
+    A --> Q[Verification Quorum]
+    B --> Q
+    C --> Q
+
+    Q -->|2 of 3 PASS| F[VERIFIED]
+```
+
+This reduces dependence on one verifier.
+
+---
+
+## Verifier Independence
+
+AGY should detect potential conflicts of interest.
+
+The protocol can evaluate relationships such as:
+
+- same controlling owner;
+- direct delegation relationship;
+- repeated reciprocal verification;
+- strongly correlated identity graph;
+- shared organization;
+- unusual verification patterns.
+
+A verifier may still perform technical checks, but its independence classification can affect whether its result satisfies a mission policy.
+
+---
+
+## Verification Profiles
+
+Different missions require different verification.
+
+### Software
+
+Possible evidence:
+
+- unit tests;
+- integration tests;
+- deterministic build;
+- static analysis;
+- security scan;
+- artifact hash.
+
+### Research
+
+Possible evidence:
+
+- cited sources;
+- source timestamps;
+- independent corroboration;
+- structured claim verification.
+
+### Data Processing
+
+Possible evidence:
+
+- input commitment;
+- transformation specification;
+- output commitment;
+- deterministic validation.
+
+### Automation
+
+Possible evidence:
+
+- execution trace;
+- expected state;
+- resulting state;
+- independent probe.
+
+AGY should not force every domain into one universal verifier.
+
+---
+
+## Proof of Useful Action Integration
+
+A Proof of Useful Action can only become reputation-bearing after required verification succeeds.
+
+```mermaid
+flowchart LR
+    M[Mission] --> X[Execution]
+    X --> E[Evidence]
+    E --> V[Verification]
+    V -->|PASS| P[PoUA]
+    P --> R[Reputation Update]
+
+    V -->|FAIL| N[No Reputation Credit]
+```
+
+Canonical rule:
+
+```text
+ACTION WITHOUT EVIDENCE
+=
+UNVERIFIED
+
+EVIDENCE WITHOUT VERIFICATION
+=
+PENDING
+
+VERIFIED EVIDENCE
+=
+ELIGIBLE FOR ACCEPTANCE
+
+ACCEPTED VERIFIED RESULT
+=
+ELIGIBLE FOR REPUTATION
+```
+
+---
+
+## AGY Audit Ledger
+
+AGY maintains an append-only audit model for important protocol events.
+
+The Audit Ledger can record:
+
+- identity creation;
+- key rotation;
+- capability changes;
+- intents;
+- missions;
+- delegation;
+- execution commitments;
+- evidence;
+- verification;
+- reputation events;
+- Guardian actions;
+- governance actions;
+- payment authorization;
+- settlement receipts.
+
+Canonical chain:
+
+```mermaid
+flowchart LR
+    I[Identity] --> C[Capability]
+    C --> N[Intent]
+    N --> M[Mission]
+    M --> A[Action]
+    A --> E[Evidence]
+    E --> V[Verification]
+    V --> R[Receipt]
+    R --> L[Audit Ledger]
+```
+
+Every critical transition is attributable.
+
+---
+
+## Hash-Linked Audit Events
+
+Audit events can reference previous events.
+
+```text
+EVENT 001
+hash: A
+
+EVENT 002
+previous: A
+hash: B
+
+EVENT 003
+previous: B
+hash: C
+```
+
+Tampering with an earlier event changes the subsequent commitment chain.
+
+This provides additional integrity verification on top of blockchain consensus.
+
+---
+
+## Guardian Security Layer
+
+AGY introduces a Guardian security layer that operates independently from model intelligence.
+
+Guardian evaluates whether an action is permitted under current policy.
+
+```mermaid
+flowchart TD
+    A[Agent Intent] --> G[Guardian]
+
+    G --> I[Identity Check]
+    I --> C[Capability Check]
+    C --> M[Mission Scope]
+    M --> P[Policy Check]
+    P --> R[Risk Engine]
+
+    R --> D{Decision}
+
+    D -->|ALLOW| X[Execution]
+    D -->|APPROVAL REQUIRED| H[Approval Gateway]
+    D -->|DENY| Z[Blocked + Audit Receipt]
+
+    H -->|APPROVED| X
+    H -->|DENIED| Z
+```
+
+Guardian does not ask:
+
+> Is this AI intelligent enough?
+
+Guardian asks:
+
+> Is this exact action permitted under the current authority and policy state?
+
+---
+
+## Guardian Decision Types
+
+Possible decisions:
+
+```text
+ALLOW
+DENY
+REQUIRE_APPROVAL
+REQUIRE_ADDITIONAL_VERIFICATION
+RATE_LIMIT
+QUARANTINE
+SUSPEND_CAPABILITY
+SUSPEND_AGENT
+```
+
+Every decision includes a reason code.
+
+Example:
+
+```text
+DECISION:
+DENY
+
+REASON:
+CAPABILITY_SCOPE_MISMATCH
+
+AGENT:
+AGENT-420
+
+MISSION:
+AGY-MISSION-1002
+```
+
+---
+
+## Fail-Closed Security
+
+Sensitive AGY actions should fail closed.
+
+If required authorization data cannot be verified:
+
+```text
+UNKNOWN
+≠
+ALLOW
+```
+
+Instead:
+
+```text
+UNKNOWN
+→
+DENY OR REQUIRE APPROVAL
+```
+
+This applies particularly to:
+
+- owner assets;
+- treasury operations;
+- root policy;
+- validator governance;
+- capability escalation;
+- key management;
+- bridge administration;
+- security controls.
+
+---
+
+## Agent Behavior Firewall
+
+AGY can include an Agent Behavior Firewall that evaluates execution patterns over time.
+
+Signals may include:
+
+- excessive request frequency;
+- repeated denied intents;
+- unusual capability use;
+- abnormal delegation;
+- unexpected mission targets;
+- rapid identity changes;
+- verifier collusion patterns;
+- reputation manipulation attempts;
+- resource exhaustion behavior.
+
+Conceptual pipeline:
+
+```mermaid
+flowchart LR
+    T[Agent Activity Stream]
+    --> B[Behavior Analysis]
+    --> A[Anomaly Detection]
+    --> P[Policy Engine]
+    --> D{Decision}
+
+    D --> N[Normal]
+    D --> Q[Throttle]
+    D --> S[Suspend]
+    D --> R[Require Review]
+```
+
+The firewall does not need access to private chain-of-thought.
+
+It evaluates observable actions and protocol state.
+
+---
+
+## Capability Escalation Protection
+
+An agent must not be able to grant itself additional authority.
+
+Forbidden self-escalation pattern:
+
+```text
+AGENT
+→ modifies own capability
+→ receives higher privilege
+```
+
+Required pattern:
+
+```text
+AGENT REQUEST
+→ AUTHORIZED ISSUER
+→ POLICY CHECK
+→ APPROVAL IF REQUIRED
+→ CAPABILITY GRANT
+→ AUDIT RECEIPT
+```
+
+The issuer must itself possess authority to grant the requested capability.
+
+---
+
+## Delegation Safety
+
+Delegation can only reduce or preserve authority.
+
+It must never increase authority.
+
+Mathematically:
+
+```text
+Child Authority
+⊆
+Parent Delegated Authority
+⊆
+Parent Available Authority
+```
+
+Example:
+
+```text
+Parent capabilities:
+READ
+CODE
+TEST
+DEPLOY
+
+Delegated capabilities:
+CODE
+TEST
+
+Child receives:
+CODE
+TEST
+
+Child must NOT receive:
+DEPLOY
+```
+
+---
+
+## Revocation Propagation
+
+If a parent capability is revoked, dependent delegations can automatically become invalid.
+
+```mermaid
+graph TD
+    P[Parent Capability]
+    P --> D1[Delegation A]
+    P --> D2[Delegation B]
+
+    D1 --> A1[Agent 1]
+    D2 --> A2[Agent 2]
+
+    R[REVOKE Parent Capability] --> P
+
+    P -. invalidates .-> D1
+    P -. invalidates .-> D2
+```
+
+This prevents stale delegated authority.
+
+---
+
+## Emergency Security Mode
+
+AGY can define emergency states for severe incidents.
+
+Possible modes:
+
+```text
+NORMAL
+ELEVATED
+RESTRICTED
+EMERGENCY
+RECOVERY
+```
+
+Emergency mode may temporarily restrict:
+
+- capability issuance;
+- high-risk transactions;
+- bridge operations;
+- governance changes;
+- validator membership changes;
+- treasury actions.
+
+Routine read-only or safety-critical recovery operations can continue when policy permits.
+
+Emergency controls must themselves be auditable and governed.
+
+---
+
+## Security Policy Versioning
+
+Every critical authorization decision should reference the policy version used.
+
+Example:
+
+```text
+POLICY:
+AGY-GUARDIAN-SECURITY
+
+VERSION:
+1.4.2
+
+DECISION:
+ALLOW
+
+TIMESTAMP:
+...
+
+EVIDENCE:
+...
+```
+
+If policy changes later, historical actions remain explainable according to the policy that existed at execution time.
+
+---
+
+## Policy Root
+
+AGY can periodically commit a cryptographic Policy Root.
+
+```text
+Identity Policy
+Capability Policy
+Guardian Policy
+Mission Policy
+Financial Policy
+Validator Policy
+
+        ↓
+
+MERKLE TREE
+
+        ↓
+
+AGY POLICY ROOT
+```
+
+This makes policy state independently verifiable.
+
+---
+
+## Zero Trust
+
+AGY follows Zero Trust principles.
+
+No participant receives permanent implicit trust because it previously behaved correctly.
+
+Every important request is evaluated according to current state.
+
+Canonical model:
+
+```text
+VERIFY IDENTITY
++
+VERIFY CAPABILITY
++
+VERIFY MISSION
++
+VERIFY POLICY
++
+VERIFY CONTEXT
+=
+AUTHORIZATION DECISION
+```
+
+---
+
+## Security Separation
+
+AGY explicitly separates:
+
+```text
+IDENTITY
+AUTHORITY
+INTELLIGENCE
+FINANCIAL POWER
+GOVERNANCE POWER
+VALIDATOR POWER
+```
+
+A validator is not automatically a treasury controller.
+
+A powerful AI is not automatically an administrator.
+
+A mission executor is not automatically a verifier.
+
+A verifier is not automatically a settlement authority.
+
+A wallet owner is not automatically permitted to modify protocol governance.
+
+Each authority is independently defined.
+
+---
+
+## Approval Gateway
+
+Sensitive operations can pass through the AGY Approval Gateway.
+
+```mermaid
+sequenceDiagram
+    participant A as AI Agent
+    participant I as Intent Protocol
+    participant G as Guardian
+    participant P as Approval Gateway
+    participant X as Executor
+    participant L as Audit Ledger
+
+    A->>I: Submit Intent
+    I->>G: Validate Identity + Capability + Mission
+    G->>P: Approval Required
+    P-->>G: Approved
+    G->>X: Execute Authorized Action
+    X->>L: Evidence Receipt
+    L-->>A: Final Audit Reference
+```
+
+Approval can come from:
+
+- owner;
+- organization;
+- multisignature group;
+- governance;
+- designated authority;
+- automated policy when explicitly permitted.
+
+---
+
+## Financial Safety Boundary
+
+Financial operations receive a separate authorization chain.
+
+Canonical AGY economic path:
+
+```mermaid
+flowchart LR
+    C[Capability]
+    --> B[Budget Policy]
+    --> P[Payment Intent]
+    --> A[Authorization]
+    --> S[Settlement]
+    --> R[Payment Receipt]
+    --> E[Audit Evidence]
+```
+
+Critical rule:
+
+```text
+PAYMENT INTENT
+≠
+PAYMENT
+
+AUTHORIZED
+≠
+SETTLED
+
+SETTLED
+≠
+CONFIRMED
+
+CONFIRMED
+requires
+VERIFIABLE PAYMENT RECEIPT
+```
+
+This prevents autonomous systems from reporting revenue or settlement that never occurred.
+
+---
+
+## Security Evidence Levels
+
+AGY can standardize evidence status:
+
+```text
+VERIFIED_PASS
+PARTIAL
+BLOCKED
+FAILED
+UNVERIFIED
+```
+
+These statuses prevent ambiguous declarations such as:
+
+"probably working"
+
+or:
+
+"should be connected"
+
+A subsystem only receives `VERIFIED_PASS` when its Definition of Done is supported by actual evidence.
+
+---
+
+## No-Recheck Without State Change
+
+Verified evidence can be reused until a meaningful state change occurs.
+
+A recheck becomes necessary when:
+
+- code changes;
+- runtime changes;
+- credentials change;
+- deployment changes;
+- provider changes;
+- policy changes;
+- security state changes;
+- previous action fails;
+- significant live-time validation becomes necessary.
+
+This prevents autonomous agents from wasting resources repeatedly proving unchanged facts.
+
+---
+
+## AGY Trust Architecture
+
+The complete trust chain becomes:
+
+```mermaid
+flowchart TD
+    ID[AI Passport]
+    --> CAP[Capability]
+    --> INT[Intent]
+    --> MIS[Mission]
+    --> GUARD[Guardian]
+    --> AUTH[Authorization]
+    --> EXEC[Execution]
+    --> EV[Evidence]
+    --> VER[Verification]
+    --> ACC[Acceptance]
+    --> REP[Reputation]
+    --> AUDIT[Audit Ledger]
+```
+
+No individual layer replaces the others.
+
+Security emerges from their composition.
+
+---
+
+## AGY Security Constitution
+
+AGY adopts the following foundational rules:
+
+```text
+IDENTITY ≠ AUTHORITY
+
+CAPABILITY ≠ APPROVAL
+
+INTELLIGENCE ≠ PRIVILEGE
+
+CLAIM ≠ EVIDENCE
+
+EVIDENCE ≠ VERIFICATION
+
+AUTHORIZATION ≠ EXECUTION
+
+EXECUTION ≠ SUCCESS
+
+PAYMENT INTENT ≠ PAYMENT
+
+NO VERIFIED EVIDENCE
+→
+NO VERIFIED CLAIM
+```
+
+These rules are intended to remain stable even as AGY's implementation evolves.
+
+---
+
+## Architectural Target
+
+AGY Evidence and Security architecture targets:
+
+- immutable Evidence Receipts;
+- Merkle evidence commitments;
+- independent verification;
+- multi-verifier quorum;
+- domain-specific verification;
+- evidence-backed Proof of Useful Action;
+- append-only Audit Ledger;
+- Guardian policy enforcement;
+- Agent Behavior Firewall;
+- fail-closed authorization;
+- capability escalation protection;
+- delegation safety;
+- revocation propagation;
+- emergency security modes;
+- policy versioning;
+- Policy Roots;
+- Zero Trust;
+- Approval Gateway;
+- independent financial authorization;
+- explicit evidence states.
+
+AGY is designed so that autonomous intelligence can operate at high speed without requiring blind trust.
