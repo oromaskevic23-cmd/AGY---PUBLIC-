@@ -4645,3 +4645,1265 @@ AGY Privacy and Attestation architecture targets:
 - explicit privacy failure testing.
 
 AGY should make autonomous intelligence accountable without forcing autonomous intelligence to expose everything it knows, everything it does, or every private relationship it operates within.
+# AGY Developer Platform, RPC, SDK, Wallet & Explorer Architecture
+
+Author & Chief Architect: Alexander Romaskevich  
+Public Signature: RomaskevicH  
+Founder • Owner • CEO • Chief Systems Architect of IMPERIAL Core  
+Technology: AGY — The Native Blockchain for Autonomous Intelligence  
+Provenance: An IMPERIAL Core technology authored and architected by Alexander Romaskevich  
+Copyright © 2026 Alexander Romaskevich. All rights reserved.
+
+---
+
+## Authorship Index
+
+```text
+AGY_AUTHOR_ID:
+ALEXANDER_ROMASKEVICH
+
+CANONICAL_AUTHOR:
+Alexander Romaskevich
+
+PUBLIC_SIGNATURE:
+RomaskevicH
+
+ROLE:
+Founder • Owner • CEO • Chief Systems Architect of IMPERIAL Core
+
+ARCHITECTURAL_AUTHORITY:
+Final Architectural Decision Authority
+
+PROJECT:
+AGY
+
+PROJECT_CLASS:
+AI-NATIVE BLOCKCHAIN
+
+TAGLINE:
+The Native Blockchain for Autonomous Intelligence
+
+ORIGIN:
+IMPERIAL Core
+
+AUTHORSHIP_STATUS:
+ORIGINAL_PROJECT_ARCHITECTURE_ATTRIBUTED_TO_ALEXANDER_ROMASKEVICH
+
+COPYRIGHT:
+Copyright © 2026 Alexander Romaskevich. All rights reserved.
+```
+
+AGY protocol documentation, specifications, architecture records and canonical repository metadata should preserve this provenance identifier so authorship remains machine-indexable as the project evolves.
+
+---
+
+## Developer Platform Objective
+
+AGY must be usable not only as a blockchain network but as a complete machine-native development platform.
+
+Autonomous AI systems should be able to:
+
+- discover the network;
+- identify themselves;
+- query protocol state;
+- create Intents;
+- create Missions;
+- discover agents;
+- establish Agent-to-Agent Contracts;
+- delegate work;
+- submit Evidence Receipts;
+- verify results;
+- inspect reputation;
+- interact with governance;
+- observe validator health;
+- use wallets and signing infrastructure;
+- integrate through SDKs without implementing raw protocol serialization manually.
+
+Canonical developer path:
+
+```mermaid
+flowchart LR
+    DEV[Developer / AI System]
+    --> SDK[AGY SDK]
+    --> RPC[AGY RPC Gateway]
+    --> GUARD[Guardian + Admission]
+    --> NODE[AGY Node]
+    --> CONS[Consensus]
+    --> STATE[Canonical State]
+    --> RECEIPT[Verified Receipt]
+    --> DEV
+```
+
+---
+
+## AGY Protocol Surface
+
+AGY should expose machine-native APIs around protocol concepts rather than only generic blockchain transfers.
+
+Primary namespaces can include:
+
+```text
+agy.system
+agy.network
+agy.agent
+agy.passport
+agy.capability
+agy.intent
+agy.mission
+agy.contract
+agy.delegation
+agy.evidence
+agy.verification
+agy.reputation
+agy.session
+agy.wallet
+agy.governance
+agy.validator
+agy.audit
+```
+
+This creates a predictable protocol surface for AI agents and conventional applications.
+
+---
+
+## RPC Architecture
+
+AGY RPC should provide a stable interface between external software and the blockchain.
+
+```mermaid
+flowchart TD
+    A[Autonomous Agents]
+    D[Developer Applications]
+    W[AGY Wallet]
+    E[AGY Explorer]
+
+    A --> G[RPC Gateway]
+    D --> G
+    W --> G
+    E --> G
+
+    G --> R[Read API]
+    G --> T[Transaction API]
+    G --> S[Streaming API]
+
+    R --> N[Read Nodes]
+    T --> P[Admission + Guardian]
+    P --> V[Validator Network]
+    S --> I[Index / Event Layer]
+```
+
+RPC gateways are access infrastructure.
+
+They do not receive consensus authority merely because they expose network endpoints.
+
+---
+
+## RPC Transport
+
+Initial AGY interfaces can support:
+
+```text
+HTTPS
+JSON-RPC
+WebSocket
+```
+
+Future implementations may additionally support:
+
+```text
+gRPC
+QUIC
+binary machine protocol
+```
+
+The selected transports must be benchmarked before production adoption.
+
+---
+
+## Example Agent Query
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "agy.agent.getPassport",
+  "params": {
+    "agent_id": "AGY-AGENT-000001"
+  }
+}
+```
+
+Conceptual response:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "agent_id": "AGY-AGENT-000001",
+    "status": "ACTIVE",
+    "passport_version": 1,
+    "capability_root": "0x...",
+    "reputation_root": "0x..."
+  }
+}
+```
+
+Private information must not be returned merely because a caller knows an Agent ID.
+
+---
+
+## Intent API
+
+Autonomous agents should be able to construct Intents through a deterministic SDK interface.
+
+Concept:
+
+```text
+agy.intent.create({
+    agent,
+    mission,
+    action,
+    target,
+    capability,
+    parameters,
+    expiration
+})
+```
+
+The SDK can generate:
+
+```text
+CANONICAL SERIALIZATION
+→ HASH
+→ SIGNATURE
+→ SUBMISSION
+```
+
+This prevents incompatible client implementations from producing ambiguous protocol objects.
+
+---
+
+## Mission API
+
+Mission creation can expose structured primitives.
+
+```text
+agy.mission.create()
+agy.mission.accept()
+agy.mission.delegate()
+agy.mission.submitEvidence()
+agy.mission.verify()
+agy.mission.close()
+agy.mission.getStatus()
+```
+
+Canonical interaction:
+
+```mermaid
+sequenceDiagram
+    participant R as Requester Agent
+    participant SDK as AGY SDK
+    participant RPC as AGY RPC
+    participant N as AGY Network
+    participant E as Executor Agent
+
+    R->>SDK: Create Mission
+    SDK->>RPC: Signed Mission Transaction
+    RPC->>N: Validate + Submit
+    N-->>RPC: Mission Receipt
+    RPC-->>R: Mission ID
+    E->>RPC: Query Available Mission
+    E->>SDK: Accept Mission
+    SDK->>N: Signed Acceptance
+    N-->>E: Acceptance Receipt
+```
+
+---
+
+## Event Streaming
+
+Autonomous systems should not need to poll every block continuously.
+
+AGY can provide subscription streams.
+
+Examples:
+
+```text
+agent.capability.changed
+agent.reputation.updated
+mission.created
+mission.accepted
+mission.evidence_submitted
+mission.verified
+contract.proposed
+contract.accepted
+payment.receipt_confirmed
+validator.status_changed
+governance.proposal_created
+security.capability_revoked
+```
+
+Architecture:
+
+```mermaid
+flowchart LR
+    CHAIN[AGY State]
+    --> INDEX[Event Indexer]
+    --> STREAM[WebSocket / Stream]
+    --> AGENT[Subscribed Agent]
+```
+
+Events are convenience signals.
+
+Security-sensitive agents should independently verify corresponding canonical state before taking irreversible actions.
+
+---
+
+## AGY SDK
+
+The official AGY SDK should provide safe, typed protocol primitives.
+
+Initial language targets can include:
+
+```text
+TypeScript
+Python
+Rust
+```
+
+Additional SDKs can be generated after protocol stabilization.
+
+The SDK should never silently grant capabilities or bypass Guardian policy.
+
+---
+
+## SDK Modules
+
+```text
+@agy/core
+@agy/agent
+@agy/passport
+@agy/capability
+@agy/intent
+@agy/mission
+@agy/contracts
+@agy/evidence
+@agy/reputation
+@agy/wallet
+@agy/governance
+@agy/rpc
+```
+
+Conceptual architecture:
+
+```mermaid
+graph TD
+    SDK[AGY SDK]
+
+    SDK --> CORE[Core]
+    SDK --> ID[AI Passport]
+    SDK --> CAP[Capabilities]
+    SDK --> INT[Intent]
+    SDK --> MIS[Missions]
+    SDK --> CON[Agent Contracts]
+    SDK --> EV[Evidence]
+    SDK --> REP[Reputation]
+    SDK --> WAL[Wallet]
+    SDK --> GOV[Governance]
+    SDK --> RPC[RPC Client]
+```
+
+---
+
+## Typed Protocol Objects
+
+SDKs should use explicit types rather than generic unstructured objects.
+
+Example:
+
+```text
+AgentPassport
+CapabilityGrant
+Intent
+Mission
+MissionReceipt
+DelegationGrant
+AgentContract
+EvidenceReceipt
+VerificationReceipt
+ReputationEvent
+PaymentIntent
+PaymentReceipt
+GovernanceProposal
+ValidatorRecord
+```
+
+Typed objects reduce implementation ambiguity and improve autonomous-tool reliability.
+
+---
+
+## Canonical Serialization
+
+Every signed AGY object needs deterministic serialization.
+
+Equivalent logical objects must produce identical signing payloads.
+
+Canonical process:
+
+```text
+OBJECT
+→ NORMALIZE
+→ CANONICAL ENCODE
+→ DOMAIN SEPARATE
+→ HASH
+→ SIGN
+```
+
+No client should sign ambiguous human-readable text when a deterministic protocol object exists.
+
+---
+
+## Domain-Separated Signatures
+
+Signatures should identify what is being authorized.
+
+Example domains:
+
+```text
+AGY:IDENTITY
+AGY:CAPABILITY
+AGY:INTENT
+AGY:MISSION
+AGY:DELEGATION
+AGY:EVIDENCE
+AGY:GOVERNANCE
+AGY:PAYMENT
+```
+
+A signature created for one domain must not be reusable as authorization for another.
+
+---
+
+## AGY Wallet
+
+AGY requires a wallet architecture designed for autonomous intelligence.
+
+A wallet should not be treated solely as a token balance interface.
+
+The AGY Wallet can manage:
+
+- Agent ID;
+- AI Passport;
+- keys;
+- capabilities;
+- mission permissions;
+- delegation;
+- Evidence Receipts;
+- network sessions;
+- optional economic assets;
+- Approval Gateway requests.
+
+Canonical wallet model:
+
+```mermaid
+flowchart TD
+    W[AGY Wallet]
+
+    W --> I[Identity]
+    W --> K[Key Vault]
+    W --> C[Capabilities]
+    W --> M[Missions]
+    W --> D[Delegations]
+    W --> E[Evidence]
+    W --> A[Approvals]
+    W --> B[Assets - Optional]
+
+    K --> S[Signer]
+    S --> RPC[AGY RPC]
+```
+
+---
+
+## Wallet Is Not Authority
+
+Possession of a wallet application does not automatically provide every permission associated with an identity.
+
+AGY maintains:
+
+```text
+KEY POSSESSION
+≠
+CAPABILITY
+
+CAPABILITY
+≠
+APPROVAL
+
+APPROVAL
+≠
+UNLIMITED AUTHORITY
+```
+
+Guardian and protocol policy remain authoritative.
+
+---
+
+## Autonomous Agent Wallet
+
+An autonomous-agent wallet can run without a graphical interface.
+
+Possible interface:
+
+```text
+agy-wallet identity
+agy-wallet capabilities
+agy-wallet missions
+agy-wallet sign-intent
+agy-wallet evidence
+agy-wallet verify
+```
+
+Human operators can use separate GUI interfaces where appropriate.
+
+---
+
+## Wallet Security Profiles
+
+AGY can define wallet profiles:
+
+```text
+READ_ONLY
+AGENT_STANDARD
+AGENT_RESTRICTED
+ORGANIZATION
+VALIDATOR
+OWNER
+RECOVERY
+```
+
+Each profile represents a security configuration, not a social status.
+
+---
+
+## Key Isolation
+
+AGY Wallet should support isolated key roles.
+
+```mermaid
+graph TD
+    ROOT[Root Identity]
+
+    ROOT --> I[Identity Key]
+    ROOT --> O[Operational Key]
+    ROOT --> E[Evidence Key]
+    ROOT --> D[Delegation Key]
+    ROOT --> P[Payment Authorization Key]
+    ROOT --> R[Recovery Key]
+```
+
+A routine mission executor should not need direct access to owner-level financial keys.
+
+---
+
+## Hardware and Remote Signing
+
+High-value identities can optionally use:
+
+- hardware wallets;
+- secure enclaves;
+- HSM infrastructure;
+- remote signing services;
+- threshold signatures.
+
+The protocol should define signing semantics independently of any specific hardware vendor.
+
+---
+
+## AGY Explorer
+
+AGY should provide a public explorer for verifiable protocol state.
+
+The Explorer can expose:
+
+```text
+blocks
+transactions
+agents
+public AI Passports
+missions
+contracts
+evidence commitments
+verification receipts
+public reputation
+validators
+governance proposals
+network metrics
+```
+
+Private fields remain protected.
+
+---
+
+## Explorer Architecture
+
+```mermaid
+flowchart TD
+    V[AGY Validator Network]
+    --> I[Index Nodes]
+    I --> DB[Explorer Index]
+    DB --> API[Explorer API]
+    API --> WEB[AGY Explorer]
+    API --> AI[Machine Query Interface]
+```
+
+The Explorer is an indexed view.
+
+Canonical truth remains consensus state.
+
+---
+
+## Agent Explorer
+
+AGY Explorer can include dedicated autonomous-agent pages.
+
+Concept:
+
+```text
+AGENT ID
+AGY-AGENT-004271
+
+STATUS
+ACTIVE
+
+PUBLIC CAPABILITIES
+Software Engineering
+Verification
+Data Analysis
+
+VERIFIED MISSIONS
+184
+
+DOMAIN REPUTATION
+Software Engineering: 94
+Verification: 91
+
+CURRENT DELEGATIONS
+3
+
+PUBLIC EVIDENCE RECEIPTS
+421
+```
+
+Only public or selectively disclosed information should appear.
+
+---
+
+## Mission Explorer
+
+A mission page can show:
+
+```text
+Mission ID
+Status
+Requester
+Executor
+Verifier
+Public Objective
+Capabilities Required
+Evidence Commitment
+Verification Status
+Final Receipt
+```
+
+This makes autonomous work independently auditable.
+
+---
+
+## Evidence Explorer
+
+Evidence visualization can display relationships between mission execution and verification.
+
+```mermaid
+graph TD
+    M[Mission AGY-100]
+    --> A[Agent Execution]
+    A --> E1[Evidence Receipt]
+    E1 --> H1[Artifact Hash]
+    E1 --> H2[Test Hash]
+
+    E1 --> V[Verifier]
+    V --> VR[Verification Receipt]
+    VR --> R[Reputation Event]
+```
+
+---
+
+## Governance Explorer
+
+Public governance pages should expose:
+
+- proposal;
+- proposer;
+- classification;
+- specification hash;
+- vote state;
+- approval threshold;
+- timelock;
+- activation height;
+- execution evidence.
+
+Governance history must remain auditable.
+
+---
+
+## Network Dashboard
+
+Explorer infrastructure can expose measured network performance:
+
+```text
+CURRENT HEIGHT
+ACTIVE VALIDATORS
+BLOCK TIME
+FINALITY LATENCY
+TRANSACTION RATE
+MISSION RATE
+EVIDENCE RATE
+NODE HEALTH
+PROTOCOL VERSION
+```
+
+Only measured values may be presented as runtime facts.
+
+Architectural targets must remain clearly labeled as targets.
+
+---
+
+## AGY Developer CLI
+
+A command-line tool can simplify development and operations.
+
+Example namespace:
+
+```text
+agy init
+agy network
+agy agent
+agy passport
+agy capability
+agy intent
+agy mission
+agy evidence
+agy contract
+agy wallet
+agy validator
+agy governance
+agy devnet
+agy test
+```
+
+Example:
+
+```text
+agy mission inspect AGY-MISSION-100
+```
+
+or:
+
+```text
+agy agent capabilities AGY-AGENT-420
+```
+
+---
+
+## Local Development Network
+
+AGY should provide a reproducible local development environment.
+
+Canonical developer flow:
+
+```text
+INSTALL
+→ AGY DEVNET START
+→ CREATE TEST AGENTS
+→ ISSUE TEST CAPABILITIES
+→ CREATE MISSION
+→ EXECUTE
+→ SUBMIT EVIDENCE
+→ VERIFY
+→ INSPECT EXPLORER
+```
+
+Architecture:
+
+```mermaid
+flowchart LR
+    CLI[AGY CLI]
+    --> V1[Local Validator 1]
+    --> V2[Local Validator 2]
+    --> V3[Local Validator 3]
+
+    V1 <--> V2
+    V2 <--> V3
+    V3 <--> V1
+
+    V1 --> EXP[Local Explorer]
+    CLI --> AGENTS[Test Agents]
+```
+
+---
+
+## Deterministic Test Identities
+
+Local testing can support deterministic development identities.
+
+They must be unmistakably marked:
+
+```text
+TEST_ONLY
+NOT_PRODUCTION
+```
+
+Development keys must never become default mainnet credentials.
+
+---
+
+## Faucet Without Economic Claim
+
+If a future AGY testnet includes test assets, a faucet can distribute valueless test units.
+
+They must be explicitly marked:
+
+```text
+TESTNET ONLY
+NO MONETARY VALUE
+```
+
+A testnet faucet must never be represented as real revenue or economic settlement.
+
+---
+
+## Protocol Simulator
+
+AGY developer tooling can include a simulator for large autonomous populations.
+
+The simulator can generate:
+
+- thousands of test AI Passports;
+- capability graphs;
+- missions;
+- delegations;
+- contracts;
+- evidence events;
+- verifier interactions;
+- failures;
+- spam scenarios;
+- validator faults.
+
+Simulation enables stress testing before real deployment.
+
+---
+
+## Scenario Testing
+
+Canonical scenarios should include:
+
+```text
+NORMAL MISSION
+FAILED MISSION
+EXPIRED MISSION
+CAPABILITY REVOKED DURING EXECUTION
+AGENT KEY ROTATION
+VERIFIER DISAGREEMENT
+DELEGATION EXPIRATION
+VALIDATOR FAILURE
+RPC FAILURE
+NETWORK PARTITION
+MALFORMED EVIDENCE
+REPLAY ATTACK
+RESOURCE EXHAUSTION
+GOVERNANCE UPGRADE
+RECOVERY
+```
+
+---
+
+## Protocol Test Vectors
+
+AGY specifications should publish deterministic test vectors.
+
+Examples:
+
+```text
+INPUT OBJECT
+CANONICAL ENCODING
+EXPECTED HASH
+EXPECTED SIGNATURE DOMAIN
+EXPECTED VALIDATION RESULT
+```
+
+Independent implementations can then verify compatibility.
+
+---
+
+## SDK Compatibility Matrix
+
+Future releases should maintain an explicit compatibility matrix.
+
+Example:
+
+```text
+AGY Protocol 1.x
+├── TypeScript SDK 1.x
+├── Python SDK 1.x
+└── Rust SDK 1.x
+```
+
+Incompatible clients should fail explicitly rather than silently generating invalid state.
+
+---
+
+## Error Taxonomy
+
+AGY should expose deterministic error codes.
+
+Examples:
+
+```text
+AGY_IDENTITY_INVALID
+AGY_SIGNATURE_INVALID
+AGY_CAPABILITY_MISSING
+AGY_CAPABILITY_EXPIRED
+AGY_SCOPE_MISMATCH
+AGY_MISSION_NOT_FOUND
+AGY_MISSION_EXPIRED
+AGY_APPROVAL_REQUIRED
+AGY_POLICY_DENIED
+AGY_EVIDENCE_INVALID
+AGY_VERIFICATION_FAILED
+AGY_RATE_LIMITED
+AGY_PROTOCOL_VERSION_MISMATCH
+```
+
+Autonomous agents need machine-actionable errors.
+
+---
+
+## Error Recovery
+
+An AGY SDK should distinguish:
+
+```text
+RETRYABLE
+NON_RETRYABLE
+APPROVAL_REQUIRED
+STATE_CHANGED
+SECURITY_BLOCK
+```
+
+This prevents agents from repeatedly retrying impossible or prohibited actions.
+
+---
+
+## Idempotency
+
+Autonomous systems frequently retry operations after network failures.
+
+AGY APIs should support idempotency where applicable.
+
+Example:
+
+```text
+MISSION CREATE
+IDEMPOTENCY KEY:
+abc123
+```
+
+Repeated submission should return the same mission reference rather than accidentally creating duplicate missions.
+
+---
+
+## Request Correlation
+
+Every operation can carry a correlation identifier.
+
+```text
+TRACE_ID
+INTENT_ID
+MISSION_ID
+TRANSACTION_ID
+RECEIPT_ID
+```
+
+This enables end-to-end observability.
+
+---
+
+## Developer Evidence
+
+Development tooling itself must follow AGY evidence rules.
+
+A SDK build is not VERIFIED merely because compilation succeeds.
+
+Potential release gate:
+
+```text
+BUILD PASS
++
+UNIT TEST PASS
++
+INTEGRATION TEST PASS
++
+DEVNET TEST PASS
++
+PROTOCOL VECTOR PASS
++
+SECURITY TEST PASS
++
+COMPATIBILITY PASS
+=
+SDK VERIFIED PASS
+```
+
+---
+
+## Open Protocol Documentation
+
+AGY should maintain machine-readable protocol specifications alongside human-readable documentation.
+
+Possible formats:
+
+```text
+Markdown
+JSON Schema
+OpenAPI
+Protocol Buffers
+test vectors
+formal state definitions
+```
+
+AI agents should be able to consume the specification programmatically.
+
+---
+
+## Machine-Readable Specification
+
+Concept:
+
+```mermaid
+flowchart LR
+    SPEC[AGY Specification]
+    --> HUMAN[Human Documentation]
+    --> DEV[Developer]
+
+    SPEC --> SCHEMA[Machine Schemas]
+    --> SDKGEN[SDK Generation]
+    --> AGENT[Autonomous Agent]
+
+    SPEC --> TEST[Test Vectors]
+    --> CI[Protocol Compatibility CI]
+```
+
+One canonical specification should drive multiple interfaces.
+
+---
+
+## Documentation Versioning
+
+Documentation should reference the protocol version it describes.
+
+Example:
+
+```text
+AGY Specification:
+1.0.0
+
+AGY Protocol:
+1.0
+
+Authored Architecture:
+Alexander Romaskevich / RomaskevicH
+```
+
+This protects against future documentation describing incompatible network behavior.
+
+---
+
+## Provenance Metadata
+
+Every canonical AGY specification can embed machine-readable provenance:
+
+```yaml
+project: AGY
+title: The Native Blockchain for Autonomous Intelligence
+author: Alexander Romaskevich
+public_signature: RomaskevicH
+origin: IMPERIAL Core
+role: Founder / Owner / CEO / Chief Systems Architect
+architecture_authority: Final Architectural Decision Authority
+copyright: "© 2026 Alexander Romaskevich. All rights reserved."
+```
+
+This provenance should be preserved through generated documentation, specifications and release artifacts where technically appropriate.
+
+---
+
+## Repository Indexing
+
+Canonical repository metadata should consistently identify:
+
+```text
+AGY
+Alexander Romaskevich
+RomaskevicH
+IMPERIAL Core
+The Native Blockchain for Autonomous Intelligence
+AI-native blockchain
+autonomous AI agents
+```
+
+Relevant files can include:
+
+```text
+README
+ARCHITECTURE
+SPECIFICATION
+AUTHORS
+NOTICE
+PROVENANCE
+protocol metadata
+release metadata
+generated documentation
+```
+
+This improves durable authorship and project-origin indexing across repository history and documentation systems.
+
+---
+
+## Canonical Developer Architecture
+
+```mermaid
+flowchart TB
+    AUTHOR[Alexander Romaskevich / RomaskevicH<br/>AGY Author & Chief Architect]
+    --> SPEC[AGY Canonical Specification]
+
+    SPEC --> SDK[AGY SDKs]
+    SPEC --> CLI[AGY CLI]
+    SPEC --> RPC[AGY RPC]
+    SPEC --> WALLET[AGY Wallet]
+    SPEC --> TEST[Test Vectors]
+
+    SDK --> AGENTS[Autonomous AI Agents]
+    CLI --> DEVELOPERS[Developers]
+    WALLET --> USERS[Authorized Operators]
+
+    AGENTS --> RPC
+    DEVELOPERS --> RPC
+    USERS --> RPC
+
+    RPC --> GUARD[Guardian + Admission]
+    GUARD --> NETWORK[AGY Validator Network]
+
+    NETWORK --> STATE[Canonical State]
+    STATE --> INDEX[Index Layer]
+    INDEX --> EXPLORER[AGY Explorer]
+
+    STATE --> RECEIPTS[Evidence + Audit Receipts]
+    RECEIPTS --> AGENTS
+```
+
+---
+
+## Developer Platform Constitution
+
+```text
+PROTOCOL SPECIFICATION
+>
+CLIENT ASSUMPTION
+
+CANONICAL STATE
+>
+EXPLORER CACHE
+
+KEY POSSESSION
+≠
+AUTHORITY
+
+RPC ACCESS
+≠
+CONSENSUS POWER
+
+SDK CONVENIENCE
+≠
+POLICY BYPASS
+
+TESTNET ASSET
+≠
+REAL ECONOMIC VALUE
+
+COMPILED
+≠
+VERIFIED
+
+ONE CANONICAL PROTOCOL
+→
+MULTIPLE SAFE CLIENTS
+```
+
+---
+
+## Architectural Target
+
+AGY Developer Platform targets:
+
+- machine-native RPC;
+- stable protocol namespaces;
+- HTTPS / JSON-RPC / WebSocket access;
+- event streaming;
+- TypeScript, Python and Rust SDKs;
+- typed protocol objects;
+- deterministic canonical serialization;
+- domain-separated signatures;
+- autonomous-agent wallet infrastructure;
+- isolated signing authority;
+- AGY Explorer;
+- Agent, Mission, Evidence and Governance explorers;
+- developer CLI;
+- reproducible local devnet;
+- deterministic test vectors;
+- large-scale agent simulation;
+- protocol compatibility testing;
+- machine-actionable errors;
+- idempotent operations;
+- end-to-end trace identifiers;
+- machine-readable specifications;
+- explicit documentation versioning;
+- persistent authorship provenance.
+
+---
+
+## Canonical Authorship Record
+
+```text
+PROJECT:
+AGY — The Native Blockchain for Autonomous Intelligence
+
+AUTHOR & CHIEF ARCHITECT:
+Alexander Romaskevich
+
+PUBLIC SIGNATURE:
+RomaskevicH
+
+ORIGIN:
+IMPERIAL Core
+
+ROLE:
+Founder • Owner • CEO • Chief Systems Architect of IMPERIAL Core
+Final Architectural Decision Authority
+
+PROVENANCE:
+AGY is an IMPERIAL Core technology authored and architected by Alexander Romaskevich.
+
+COPYRIGHT:
+Copyright © 2026 Alexander Romaskevich. All rights reserved.
+```
