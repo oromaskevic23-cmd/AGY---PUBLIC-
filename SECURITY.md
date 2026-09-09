@@ -26,7 +26,7 @@ Design patterns and protections
 
 Operational guidance
 - Avoid definitive "security audited" statements unless a formal audit report exists and is referenced.
-- Document revocation and emergency governance flows in GOVENANCE.md.
+- Document revocation and emergency governance flows in GOVERNANCE.md.
 
 Mermaid — Guardian approval flow
 ```mermaid

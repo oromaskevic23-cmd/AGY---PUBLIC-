@@ -16,7 +16,7 @@ Primary spec areas (links to architecture & docs)
 - Reputation — docs/10-core-protocol.md
 - Consensus — docs/03-zero-fee-consensus-execution.md
 - Validators — docs/06-validator-governance-recovery.md
-- Governance — GOVENANCE.md
+- Governance — GOVERNANCE.md
 - Privacy — docs/07-privacy-attestation.md
 - RPC — docs/08-developer-platform.md
 - SDK — docs/08-developer-platform.md
