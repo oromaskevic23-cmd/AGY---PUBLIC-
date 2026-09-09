@@ -2,10 +2,15 @@ Author & Chief Architect: Alexander Romaskevich (RomaskevicH)
 
 AGY — The Native Blockchain for Autonomous Intelligence
 
-Short description
-AGY is an AI-native blockchain infrastructure designed to enable autonomous agents to express identity, capability, intent, and to execute missions with cryptographic evidence and verifiable reputation. AGY is an IMPERIAL Core technology originally authored and architected by Alexander Romaskevich.
+## Short description
 
-Canonical lifecycle (high-level)
+AGY is an AI-native blockchain infrastructure designed to enable autonomous agents to express identity, capability, intent, and to execute missions with cryptographic evidence and verifiable reputation.
+
+---
+
+## Canonical lifecycle (high-level)
+
+```
 AI Passport
 → Identity
 → Capability
@@ -16,15 +21,22 @@ AI Passport
 → Evidence
 → Verification
 → Reputation
+```
 
-Security Constitution
+---
+
+## Security Constitution
+
 - Zero Trust by default
 - Separation of Identity and Authority
 - Separation of Capability and Approval
 - Evidence-first verification model
 - Fail-closed defaults for safety-critical flows
 
-Protocol layers (high-level)
+---
+
+## Protocol layers (high-level)
+
 - Network & Transport
 - Consensus & Validators
 - Ledger & Storage
@@ -36,7 +48,10 @@ Protocol layers (high-level)
 - Evidence & Verification Layer
 - Reputation & Economics
 
-Mermaid — AGY lifecycle
+---
+
+## Mermaid — AGY lifecycle
+
 ```mermaid
 flowchart LR
   Passport["AI Passport"] --> Identity["Identity"]
@@ -50,25 +65,47 @@ flowchart LR
   Verification --> Reputation["Reputation"]
 ```
 
-Links to detailed architecture (docs/)
-- docs/01-foundation.md — Foundation and core principles
-- docs/02-agent-identity-capability-intent.md — Identity, capability, intent
-- docs/03-zero-fee-consensus-execution.md — Consensus and zero-fee execution model
-- docs/04-agent-economy-contracts.md — Agent economy and contracts
-- docs/05-evidence-security-audit.md — Evidence model and security considerations
-- docs/06-validator-governance-recovery.md — Validators, governance, recovery
-- docs/07-privacy-attestation.md — Privacy, attestation, and data minimization
-- docs/08-developer-platform.md — SDK, RPC, developer integration
-- docs/09-interoperability.md — Interop and cross-ledger patterns
-- docs/10-core-protocol.md — Core protocol details
-- docs/11-production-readiness.md — Production readiness checklist
+---
 
-AGY / IMPERIUM boundary
-AGY = AI-native blockchain infrastructure
-IMPERIUM = separate digital-asset project within IMPERIAL Core
+## Links to detailed architecture (docs/)
 
-Architectural note: Do not assume IMPERIUM tokens, gas tokens, governance tokens, validator stake, or settlement assets are the same as AGY native assets without a separate architectural decision and specification.
+- [Foundation and core principles](docs/01-foundation.md) — docs/01-foundation.md
+- [Identity, capability, intent](docs/02-agent-identity-capability-intent.md) — docs/02-agent-identity-capability-intent.md
+- [Consensus and zero-fee execution model](docs/03-zero-fee-consensus-execution.md) — docs/03-zero-fee-consensus-execution.md
+- [Agent economy and contracts](docs/04-agent-economy-contracts.md) — docs/04-agent-economy-contracts.md
+- [Evidence model and security considerations](docs/05-evidence-security-audit.md) — docs/05-evidence-security-audit.md
+- [Validators, governance, recovery](docs/06-validator-governance-recovery.md) — docs/06-validator-governance-recovery.md
+- [Privacy, attestation, and data minimization](docs/07-privacy-attestation.md) — docs/07-privacy-attestation.md
+- [SDK, RPC, developer integration](docs/08-developer-platform.md) — docs/08-developer-platform.md
+- [Interop and cross-ledger patterns](docs/09-interoperability.md) — docs/09-interoperability.md
+- [Core protocol details](docs/10-core-protocol.md) — docs/10-core-protocol.md
+- [Production readiness checklist](docs/11-production-readiness.md) — docs/11-production-readiness.md
 
-Current status
-- Architecture: Documented (this ARCHITECTURE.md serves as the canonical index)
-- Specification: In development (see SPECIFICATION.md)
+---
+
+## Supporting Documentation
+
+- [SECURITY.md](SECURITY.md) — Security model and threat analysis
+- [GOVERNANCE.md](GOVERNANCE.md) — Governance framework
+- [ROADMAP.md](ROADMAP.md) — Development roadmap
+- [AUTHORS.md](AUTHORS.md) — Project authorship and contributors
+- [PROVENANCE.md](PROVENANCE.md) — AGY origin and IMPERIAL Core relationship
+
+---
+
+## AGY / IMPERIUM boundary
+
+**AGY** = AI-native blockchain infrastructure
+
+**IMPERIUM** = separate digital-asset project within IMPERIAL Core
+
+**Architectural note:** Do not assume IMPERIUM tokens, gas tokens, governance tokens, validator stake, or settlement assets are the same as AGY native assets without a separate architectural decision. Relationship is explicitly designed, not automatic.
+
+---
+
+## Current status
+
+- **Architecture:** Documented (this ARCHITECTURE.md serves as the canonical index)
+- **Specification:** In development (see [SPECIFICATION.md](SPECIFICATION.md))
+- **Implementation:** Not yet verified
+- **Mainnet:** Not launched
