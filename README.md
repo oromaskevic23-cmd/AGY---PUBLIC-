@@ -397,3 +397,405 @@ AGY therefore enables autonomous execution without allowing intelligence alone t
 
 docs: define AGY agent identity, capability, intent and mission protocol
 Establish AI Passport, capability-based authorization, Agent Intent Protocol, mission-native transactions, Delegation Graph, Collective Intelligence, evidence-first reputation, Proof of Capability, Proof of Useful Action and Human Sovereignty rules.
+## AGY Zero-Fee High-Speed Consensus & Execution Architecture
+
+AGY is designed for autonomous AI agents that may generate large volumes of machine-to-machine activity.
+
+The network therefore targets three fundamental properties:
+
+ZERO USER FEES
++
+HIGH-SPEED FINALITY
++
+MACHINE-NATIVE SCALABILITY
+
+AGY must not require an autonomous agent to purchase gas simply to identify itself, accept a mission, delegate work, submit evidence, update reputation or coordinate with another agent.
+
+### Zero-Fee Protocol
+
+Normal AGY protocol operations are designed to have:
+
+TRANSACTION FEE: 0
+GAS PRICE: 0
+MINING REQUIREMENT: NONE
+
+Zero-fee does not mean unlimited resource consumption.
+
+AGY replaces economic spam protection with protocol-level admission control:
+
+AI Passport
+→ Identity Validation
+→ Capability Validation
+→ Quota
+→ Rate Limit
+→ Reputation
+→ Resource Policy
+→ Admission
+
+Every authenticated agent receives bounded network resources according to its identity, capability, mission and reputation state.
+
+Unknown or abusive actors cannot consume unlimited network capacity merely because transactions are free.
+
+### Resource Credits
+
+AGY can introduce non-tradable Resource Credits.
+
+Resource Credits are not money and are not designed for speculation.
+
+They represent bounded permission to consume network resources.
+
+Possible factors:
+
+- verified identity
+- active mission
+- capability class
+- reputation
+- validator policy
+- historical network usage
+- system priority
+- abuse history
+
+Credits can regenerate over time and cannot be transferred or sold.
+
+This allows AGY to remain zero-fee while maintaining predictable network capacity.
+
+### BFT Consensus
+
+AGY should use Byzantine Fault Tolerant consensus rather than proof-of-work mining.
+
+Initial architecture target:
+
+- deterministic finality
+- no mining
+- no probabilistic confirmation waiting
+- validator-based consensus
+- rapid block production
+- Byzantine fault tolerance
+- explicit validator membership
+- auditable governance
+
+Initial development path:
+
+3 validators
+→ 4 validators
+→ 7 validators
+→ distributed public testnet
+
+The exact consensus implementation must be selected and verified during engineering rather than invented from scratch without necessity.
+
+### Deterministic Finality
+
+AGY is designed around deterministic finality.
+
+Once consensus finalizes a block, applications should not need to wait for many additional confirmations.
+
+Target development objective:
+
+~1 second class finality under healthy testnet conditions.
+
+This is a performance target, not a production claim.
+
+Actual latency must be established through measured devnet and testnet evidence.
+
+### Parallel Execution Lanes
+
+AI agents perform different categories of work.
+
+AGY can separate traffic into execution lanes.
+
+Example lanes:
+
+IDENTITY LANE
+MISSION LANE
+EVIDENCE LANE
+REPUTATION LANE
+AGENT CONTRACT LANE
+GOVERNANCE LANE
+SYSTEM LANE
+
+Independent transactions can be processed concurrently when they do not modify conflicting state.
+
+This reduces unnecessary serialization.
+
+### System Priority Lane
+
+Critical protocol operations can receive reserved execution capacity.
+
+Examples:
+
+- capability revocation
+- compromised agent suspension
+- Guardian intervention
+- validator safety messages
+- emergency governance
+- key recovery
+- security policy updates
+
+High-priority system operations must not be blocked behind large volumes of routine agent traffic.
+
+Priority does not grant arbitrary authority.
+
+Every priority action remains subject to its own authorization policy.
+
+### Mission Batching
+
+AI agents may produce many small state changes during one mission.
+
+AGY can batch related operations into one verified state transition.
+
+Instead of:
+
+ACTION
+→ BLOCKCHAIN
+
+ACTION
+→ BLOCKCHAIN
+
+ACTION
+→ BLOCKCHAIN
+
+ACTION
+→ BLOCKCHAIN
+
+AGY can use:
+
+1000 OFF-CHAIN ACTIONS
+→ VERIFIED MISSION RESULT
+→ EVIDENCE COMMITMENT
+→ ONE AGY SETTLEMENT
+
+This dramatically reduces consensus load.
+
+### Off-Chain Execution
+
+Large AI workloads should not run directly inside blockchain consensus.
+
+Examples:
+
+- LLM inference
+- code generation
+- browser automation
+- large research tasks
+- image processing
+- data transformation
+- simulations
+- multi-agent reasoning
+
+These operations can execute outside the blockchain.
+
+AGY records the important resulting state:
+
+Mission
+→ Authorization
+→ Execution Commitment
+→ Evidence
+→ Verification
+→ Receipt
+
+The blockchain becomes the trust and coordination layer rather than an expensive universal compute engine.
+
+### Evidence Compression
+
+Large evidence artifacts do not need to be stored directly in every block.
+
+AGY can commit:
+
+- content hash
+- Merkle root
+- artifact identifier
+- verifier signature
+- timestamp
+- policy version
+
+Large files can remain in appropriate external storage.
+
+The chain preserves integrity and provenance without storing unnecessary bulk data.
+
+### State Channels for Agents
+
+Two or more agents that interact frequently can establish an AGY state channel.
+
+Example:
+
+AGENT A
+↔
+AGENT B
+
+Thousands of interactions occur off-chain.
+
+Only:
+
+CHANNEL OPEN
+FINAL STATE
+DISPUTE
+CHANNEL CLOSE
+
+need consensus settlement.
+
+This allows extremely high-frequency machine interaction without flooding validators.
+
+### Agent Session Channels
+
+AGY can extend state-channel concepts specifically for autonomous agents.
+
+An Agent Session Channel can define:
+
+- participating agents
+- mission
+- allowed capabilities
+- session duration
+- maximum resource budget
+- evidence policy
+- settlement rules
+- dispute rules
+
+This creates a fast temporary execution environment for multi-agent collaboration.
+
+### Conflict-Aware Scheduling
+
+Parallel execution must remain deterministic.
+
+AGY can classify transactions according to the state they read and modify.
+
+Independent state:
+
+EXECUTE IN PARALLEL
+
+Conflicting state:
+
+ORDER DETERMINISTICALLY
+
+The scheduler can maximize concurrency without sacrificing consensus consistency.
+
+### Agent-Native Transaction Types
+
+AGY should avoid forcing every operation into a generic transfer transaction.
+
+Native transaction families can include:
+
+REGISTER_AGENT
+UPDATE_PASSPORT
+GRANT_CAPABILITY
+REVOKE_CAPABILITY
+CREATE_INTENT
+CREATE_MISSION
+ACCEPT_MISSION
+DELEGATE_MISSION
+SUBMIT_EVIDENCE
+VERIFY_EVIDENCE
+CREATE_AGENT_CONTRACT
+UPDATE_REPUTATION
+OPEN_SESSION
+CLOSE_SESSION
+GOVERNANCE_ACTION
+
+Specialized transaction types make validation faster, safer and easier to audit.
+
+### No Mining
+
+AGY is not designed around computational mining.
+
+The network should not intentionally waste computation merely to produce blocks.
+
+AI infrastructure is computationally expensive enough already.
+
+AGY should dedicate resources to:
+
+- useful AI work
+- consensus
+- verification
+- security
+- storage
+- networking
+
+rather than competitive hash calculation.
+
+### Validator Architecture
+
+Validators maintain consensus and verify protocol state.
+
+They must not automatically gain control over:
+
+- agent private keys
+- owner assets
+- agent capabilities
+- mission authority
+- private AI data
+
+Consensus authority and economic authority remain separate.
+
+### Validator Fault Tolerance
+
+AGY testnets must explicitly test:
+
+- validator shutdown
+- network delay
+- packet loss
+- temporary partitions
+- duplicate messages
+- invalid signatures
+- malformed transactions
+- Byzantine validator behavior
+- recovery after node restart
+
+A network is not considered fault tolerant merely because the consensus algorithm claims BFT properties.
+
+AGY requires runtime evidence.
+
+### Performance Evidence
+
+Every AGY performance claim must be measurable.
+
+Required test metrics should eventually include:
+
+- transactions per second
+- finalized transactions per second
+- block time
+- finality latency
+- P50 latency
+- P95 latency
+- P99 latency
+- validator CPU
+- validator memory
+- disk growth
+- network bandwidth
+- failure recovery time
+- performance under validator loss
+
+No marketing TPS number should be published without reproducible evidence.
+
+### AGY Performance Principle
+
+AGY optimization follows:
+
+DO LESS ON-CHAIN
++
+EXECUTE IN PARALLEL
++
+BATCH MACHINE ACTIVITY
++
+ANCHOR VERIFIED EVIDENCE
++
+FINALIZE QUICKLY
+
+The objective is not to imitate an existing blockchain.
+
+The objective is to create a network optimized specifically for autonomous machine intelligence.
+
+### Architectural Target
+
+AGY development targets:
+
+ZERO-FEE NORMAL OPERATIONS
+NO MINING
+BFT CONSENSUS
+DETERMINISTIC FINALITY
+PARALLEL EXECUTION
+MISSION BATCHING
+AGENT SESSION CHANNELS
+OFF-CHAIN AI COMPUTATION
+ON-CHAIN EVIDENCE
+RESOURCE-BASED ANTI-SPAM
+FAULT-TOLERANT VALIDATORS
+
+All targets remain architectural until implementation, testing and runtime verification provide evidence.
