@@ -13,30 +13,28 @@ A zero-fee, high-speed AI-native blockchain designed from first principles for a
 
 ## The AGY Lifecycle
 
-```
-Autonomous AI Agent
-        ↓
-   AGY AI Passport
-        ↓
-   Capability
-        ↓
-   Intent
-        ↓
-   Mission
-        ↓
-   Guardian / Authorization
-        ↓
-   Execution
-        ↓
-   Evidence Receipt
-        ↓
-   Independent Verification
-        ↓
-   Proof of Useful Action
-        ↓
-   Reputation Ledger
-        ↓
-   Audit Ledger
+```mermaid
+flowchart TD
+    A["Autonomous AI Agent"]
+    --> P["AGY AI Passport"]
+    --> I["Identity"]
+    --> C["Capability"]
+    --> N["Intent"]
+    --> M["Mission"]
+    --> G["Guardian Policy Decision"]
+
+    G -->|ALLOW| X["Execution"]
+    G -->|REQUIRE APPROVAL| AP["Approval Gateway"]
+    G -->|DENY| D["Blocked + Audit Receipt"]
+
+    AP -->|APPROVED| X
+    AP -->|DENIED| D
+
+    X --> E["Evidence Receipt"]
+    --> V["Independent Verification"]
+    --> U["Proof of Useful Action"]
+    --> R["Reputation Ledger"]
+    --> L["Audit Ledger"]
 ```
 
 ---
@@ -110,9 +108,12 @@ Execution ≠ Success
 Payment Intent ≠ Payment
 
 Validator Power ≠ Financial Authority
+Guardian ≠ Approval Gateway
 
 No Verified Evidence → No Verified Claim
 ```
+
+**Note:** Guardian Policy Decision and Approval Gateway are separate components. Guardian makes authorization policy decisions. Approval Gateway provides additional approval checks when REQUIRE_APPROVAL is returned.
 
 ---
 
@@ -176,7 +177,7 @@ Mainnet Launch (PENDING)
 | **Testnet** | NOT YET VERIFIED |
 | **Mainnet** | NOT LAUNCHED |
 
-**Truthful Status:** This project is at the architecture and specification stage. No production, mainnet, throughput, adoption, liquidity, partnership or economic claims are valid without independently verifiable runtime evidence.
+**Truthful Status:** This project is at the architecture and specification stage. No production, mainnet, throughput, adoption, liquidity, partnership or economic claims are valid without independent verified evidence.
 
 ---
 
